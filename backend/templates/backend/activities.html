@@ -1,0 +1,46 @@
+{% extends "backend/layout.html" %}
+{% load static %}
+
+
+{% block extraHead %}
+<link rel="stylesheet" href="{% static 'css/pages.css' %}">
+<link rel="stylesheet" href="{% static 'css/activities.css' %}">
+{% endblock %}
+
+
+{% block body %}
+<main>
+    <div class="path">
+        <p class="component"><a href="{% url 'backend:home' %}"> الصفحة الرئيسية </a></p>
+        <p class="pathArrow"> &#xbb; </p>
+        <p class="component"><a href="{% url 'backend:activities' %}"> نشاطات المؤسسة </a></p>
+    </div>
+    
+    <div class="pageContainer">
+        {% for activity in activities %}
+        <a class="activity" href="{% url 'backend:activity' activity.id %}">
+            <div class="item">
+                <div class="itemImage">
+                    <img src="{{ activity.main_img.url }}" alt="نشاط">
+                </div>
+                <div class="itemDetails">
+                    <p class="itemTitle">
+                        {{ activity.title }}
+                    </p>
+                    <div class="statistics">
+                        <p class="date">{{ activity.created_at }}</p>
+                        <div class="horizontalLine">|</div>
+                        <p class="views"> الزيارات: <span>33</span></p>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% empty %}
+        <p>لا توجد عناصر</p>
+        {% endfor %}
+
+    </div>
+
+    <div class="paginationBar"></div>
+</main>
+{% endblock %}

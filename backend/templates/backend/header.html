@@ -1,0 +1,160 @@
+{% load static %}
+
+<header class="header">
+    <div class="banner">
+        <div class="textLogos">
+            <a href="{% url 'backend:home' %}">
+              <img src="{% static 'images/textLogoHusainia.png' %}">
+              <img src="{% static 'images/textLogo.png' %}">
+            </a>
+        </div>
+        <div class="logo"><a href="{% url 'backend:home' %}"><img src="{% static 'images/logo.png' %}" alt="Logo"></a></div>
+        <div class="inputGroup">
+            <form action="./search.html" class="input">
+                <input type="text" name="q" placeholder="بحث" required>
+                <button class="searchIcon" type="submit">
+                    &#128269;
+                </button>
+            </form>
+            <div class="socialMedia">
+                <span class="popup floatItem"><img src="{% static 'icons/phone.svg' %}" alt="Phone Numbers">
+                  <span class="popuptext" id="myPopup">009647812991921<br>00989906565766</span>
+                </span>
+                <a class="floatItem" href="${facebookURL}" target="blank"><img src="{% static 'icons/facebook.svg' %}" alt="Facebook"></a>
+                <a class="floatItem" href="${instagramURL}" target="blank"><img src="{% static 'icons/instagram.svg' %}" alt="Instagram"></a>
+                <a class="floatItem" href="${telegramURL}" target="blank"><img src="{% static 'icons/telegram.svg' %}" alt="Telegram"></a>
+                <a class="floatItem" href="${youtubeURL}" target="blank"><img src="{% static 'icons/youtube.svg' %}" alt="Youtube"></a>
+                <a class="floatItem" href="${whatsappURL}" target="blank"><img src="{% static 'icons/whatsapp.svg' %}" alt="WhatsApp"></a>
+            </div>
+        </div>
+    </div>
+
+    <nav>
+        <ul class="parent">
+            <span><a href="./about.html"><li id="about" class="menuItem"> عن المؤسسة </li></a></span>
+            <span><a href="{% url 'backend:activities' %}"><li id="activities" class="menuItem"> نشاطات المؤسسة </li></a></span>
+            <li id="productions" class="menuItem"><a href="./productions.html"> نتاجات المؤسسة </a>
+                <div class="subContent">
+                    <div class="subDrop">
+                        <ul>
+                            <a href="#"><li> موسوعة التراث الأخلاقي </li></a>
+                            <a href="#"><li> موسوعة المواعظ الحسنة </li></a>
+                            <a href="#"><li> موسوعة الأخلاق الإلهية </li></a>
+                            <a href="#"><li> سلسلة الفضائل والرذائل </li></a>
+                            <a href="#"><li> الموسوعة الأخلاقية الألفبائية </li></a>
+                            <a href="#"><li> المناهج الأخلاقية </li></a>
+                            <a href="#"><li> ترجمة التراث الأخلاقي </li></a>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li id="libraries" class="menuItem"><a href="./libraries.html"> المكتبة الأخلاقية التخصصية </a>
+                <div class="subContent">
+                    <div class="subDrop">
+                        <ul>
+                            <a href="./eLibrary.html"><li> المكتبة الرقمية </li></a>
+                            <a href="./pLibrary.html"><li> المكتبة الورقية </li></a>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li id="cAndS" class="menuItem"><a href="./cAndS.html"> المؤتمرات والندوات </a>
+                <div class="subContent">
+                    <div class="subDrop">
+                        <ul>
+                            <a href="./conferences.html"><li> المؤتمرات </li></a>
+                            <a href="./seminars.html"><li> الندوات </li></a>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <span><a href="./archive.html"><li id="archive" class="menuItem"> الأسئلة الأخلاقية </li></a></span>
+        </ul>
+    </nav>
+    <div class="mobileNav">
+        <div class="icons">
+            <div class="hamburger">
+                <div style='width:1.1rem;height:.18rem;background-color:white;margin: .2rem 0;border-radius: .1rem'></div>
+                <div style='width:1.1rem;height:.19rem;background-color:white;margin-bottom: .2rem;border-radius: .1rem'></div>
+                <div style='width:1.1rem;height:.20rem;background-color:white;border-radius: .1rem'></div>
+            </div>
+            <div class="mSocialMedia">
+                <span class="popup"><img src="./assets/icons/phone.svg" alt="Phone Numbers">
+                  <span class="popuptext" id="myPopup">009647812991921<br>00989906565766</span>
+                </span>
+                <a href="${facebookURL}" target="blank"><img src="./assets/icons/facebook.svg" alt="Facebook"></a>
+                <a href="${instagramURL}" target="blank"><img src="./assets/icons/instagram.svg" alt="Instagram"></a>
+                <a href="${telegramURL}" target="blank"><img src="./assets/icons/telegram.svg" alt="Telegram"></a>
+                <a href="${youtubeURL}" target="blank"><img src="./assets/icons/youtube.svg" alt="Youtube"></a>
+                <a href="${whatsappURL}" target="blank"><img src="./assets/icons/whatsapp.svg" alt="WhatsApp"></a>
+            </div>
+        </div>
+
+        <div class="mobileMenu noselect">
+            <ul>
+            <li class="mobileMenuItem">
+              <form action="./search.html" class="input">
+                  <input type="text" name="q" placeholder="بحث" required>
+                  <button class="searchIcon" type="submit">
+                      &#128269;
+                  </button>
+              </form>
+            </li>
+            <a href="./about.html"><li class="mobileMenuItem"> عن المؤسسة </li></a>
+            <a href="./activities.html"><li class="mobileMenuItem"> نشاطات المؤسسة </li></a>
+                <li class="hasSub"><a href="./productions.html"> نتاجات المؤسسة </a><div class="more">+</div>
+                    <div class="subMenu">
+                        <a href="#"><div> موسوعة التراث الأخلاقي </div></a>
+                        <a href="#"><div> موسوعة المواعظ الحسنة </div></a>
+                        <a href="#"><div> موسوعة الأخلاق الإلهية </div></a>
+                        <a href="#"><div> سلسلة الفضائل والرذائل </div></a>
+                        <a href="#"><div> الموسوعة الأخلاقية الألفبائية </div></a>
+                        <a href="#"><div> المناهج الأخلاقية </div></a>
+                        <a href="#"><div> ترجمة التراث الأخلاقي </div></a>
+                    </div>
+                </li>
+                <li class="hasSub"><a href="./libraries.html"> المكتبة الأخلاقية التخصصية </a><div class="more">+</div>
+                  <div class="subMenu">
+                    <a href="./eLibrary.html"><div> المكتبة الرقمية </div></a>
+                    <a href="./pLibrary.html"><div> المكتبة الورقية </div></a>
+                  </div>
+                </li>
+                <li class="hasSub"><a href="./cAndS.html"> المؤتمرات والندوات </a><div class="more">+</div>
+                  <div class="subMenu">
+                    <a href="./conferences.html"><div> المؤتمرات </div></a>
+                    <a href="./seminars.html"><div> الندوات </div></a>
+                  </div>
+                </li>
+                <a href="./archive.html"><li class="mobileMenuItem"> الأسئلة الأخلاقية </li></a>
+            </ul>
+        </div>
+    </div>
+
+    <div class="floatSocial">
+
+      <a href="${whatsappShareURL}" target="blank" class="fab" tooltip="">
+          <img src="./assets/icons/whatsapp.svg" alt="">
+      </a>
+
+      <a href="${telegramShareURL}" target="blank" class="fab" tooltip="">
+          <img src="./assets/icons/telegram.svg" alt="">
+      </a>
+    
+      <a href="${twitterShareURL}" target="blank" class="fab" tooltip="">
+          <img src="./assets/icons/twitter.svg" alt="">
+      </a>
+    
+      <a href="${facebookShareURL}" target="blank" class="fab" tooltip="">
+          <img src="./assets/icons/facebook.svg" alt="">
+      </a>
+    
+      <div class="fab" tooltip="">
+          <img src="./assets/icons/share.svg" alt="">
+      </div>
+    </div>
+    <div class="upArrow">
+      <a class="" tooltip="">
+          <img src="./assets/icons/upArrow.svg" alt="">
+      </a>
+    </div>
+</header>

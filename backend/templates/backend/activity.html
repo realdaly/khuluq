@@ -1,0 +1,71 @@
+{% extends "backend/layout.html" %}
+{% load static %}
+
+{% block extraHead %}
+<link rel="stylesheet" href="{% static 'css/pages.css' %}">
+{% endblock %}
+
+
+{% block body %}
+
+    <div class="overlay">
+        <div class="overlayInner">
+            <div class="buttons">
+                <button class="overlaybutton close"> → رجوع </button>
+                <a target="_blank" href="" id="download" class="overlaybutton download" download=""> ↓ تنزيل </a>
+            </div>
+            <img>
+        </div>
+    </div>
+
+
+    <main>
+        <div class="path">
+            <p class="component"><a href="{% url 'backend:home' %}"> الصفحة الرئيسية </a></p>
+            <p class="pathArrow"> &#xbb; </p>
+            <p class="component"><a href="{% url 'backend:activities' %}"> نشاطات المؤسسة </a></p>
+            <p class="pathArrow"> &#xbb; </p>
+            <p id="articleURL" class="component"><a href="{% url 'backend:activity' activity.id %}">
+                {{ activity.title }}
+            </a></p>
+        </div>
+        <div class="article">
+            <div class="articleDetails">
+                <p class="articleTitle">
+                    {{ activity.title }}
+                </p>
+                <div class="statistics">
+                <p class="date">{{ activity.created_at }}</p>
+                <div class="horizontalLine">|</div>
+                <p class="views"> الزيارات: <span>33</span></p>
+                </div>
+            </div>
+            
+            <div class="articleContent"><div class="articleMedia">
+            <div class="articleImage">
+                <img src="{{ activity.main_img.url }}" alt="صورة المقال">
+            </div>
+        </div>
+        <div class="articleText">
+            {{ activity.body }}
+        </div>
+
+            <div class="imageGallery">
+    
+                <div class="gallery">
+                    {% for image in images %}
+                    <div onclick="imageGallery(this)" class="img">
+                        <img src="{{image.image.url}}" alt="صورة">
+                    </div>
+                    {% endfor %}
+                </div>
+
+                 
+
+            </div>
+
+        </div>
+    </main>
+
+    <script src="{% static 'js/pages.js' %}"></script>
+{% endblock %}

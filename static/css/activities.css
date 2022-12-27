@@ -1,0 +1,107 @@
+main .pageContainer {
+    margin-bottom: .5rem;
+    position: relative;
+    z-index: 1;
+}
+
+main .pageContainer .item {
+    background-color: var(--component);
+    box-shadow: var(--cardShadow);
+    border-radius: var(--borderRadius);
+    cursor: pointer;
+    display: flex;
+    margin-bottom: 1rem;
+    min-width: 100%;
+    transition: all .3s;
+}
+
+main .pageContainer .item:hover {
+    box-shadow: var(--hoverShadow);
+}
+
+main .pageContainer .item .itemImage {
+    max-height: 6rem;
+    max-width: 10rem;
+    min-height: 6rem;
+}
+
+main .pageContainer .item .itemImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: all .5s;
+    border: 2px solid var(--shadowColor);
+    border-radius: var(--borderRadius);
+}
+
+main .pageContainer .item:hover .itemImage img {
+    filter: grayscale(80%);
+}
+
+main .pageContainer .item .itemDetails {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin: .5rem;
+}
+
+main .pageContainer .item .itemDetails .itemTitle {
+    color: var(--shadowColor);
+    transition: all .5s;
+}
+
+
+main .pageContainer .item .itemDetails .statistics {
+    display: flex;
+    gap: .5rem;
+    color: var(--darkComponent);
+    font-size: 12px;
+}
+
+
+
+
+/* ------------------------- Page Styling for Mobile Screens ---------------------------- */
+@media only screen and (max-width: 768px) {
+    main .pageContainer {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        column-gap: 1rem;
+    }
+
+    main .pageContainer a {
+        width: auto;
+    }
+
+    main .pageContainer .item {
+        display: flex;
+        flex-direction: column;
+	    width: 20rem;
+        max-width: 90vw;
+        min-height: 95%;
+    }
+
+    main .pageContainer .item .itemImage {
+        float: none;
+        max-width: 100%;
+        height: 10rem;
+        max-height: 10rem;
+    }
+
+    main .pageContainer .item .itemDetails {
+        flex-direction: column-reverse;
+        align-items: center;
+        text-align: center;
+    }
+
+    main .pageContainer .item .itemDetails .itemTitle {
+        margin-top: .3rem;
+        overflow: hidden;
+        max-height: 3rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+}

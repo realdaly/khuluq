@@ -10,3 +10,8 @@ class ActivityForm(ModelForm):
             "main_img": "الصورة الرئيسية",
             "body": "نص المقال",
         }
+
+class ImageForm(ModelForm):
+    class Meta:
+        model = Image
+        fields = "__all__"

@@ -53,7 +53,7 @@
             <div class="imageGallery">
     
                 <div class="gallery">
-                    {% for image in images %}
+                    {% for image in activity.img_array.all %}
                     <div onclick="imageGallery(this)" class="img">
                         <img src="{{image.image.url}}" alt="صورة">
                     </div>

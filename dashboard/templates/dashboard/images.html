@@ -1,0 +1,23 @@
+{% extends "dashboard/layout.html" %}
+
+
+
+
+{% block body %}
+<style>
+    body {
+        display: grid;
+        justify-content: center;
+    }
+</style>
+
+<a href="{% url 'create-image' %}"><button>رفع صورة</button></a>
+
+<div class="images">
+    {% for image in images %}
+    <img width="150" src="{{image.image.url}}" alt="صورة">
+    {% empty %}
+    <p>لا توجد عناصر.</p>
+    {% endfor %}
+</div>
+{% endblock %}

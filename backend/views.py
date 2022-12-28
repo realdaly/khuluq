@@ -19,7 +19,6 @@ def activities(request):
 
 def activity(request, pk):
     activity = Activity.objects.get(id=pk)
-    images = Image.objects.filter(section=activity)
 
-    context = {"activity":activity, "images":images}
+    context = {"activity":activity}
     return render (request, "backend/activity.html", context)

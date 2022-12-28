@@ -15,3 +15,6 @@ class ImageForm(ModelForm):
     class Meta:
         model = Image
         fields = "__all__"
+        labels = {
+            "image": "رفع صور "
+        }

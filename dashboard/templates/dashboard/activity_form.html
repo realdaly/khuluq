@@ -6,21 +6,109 @@
 {% block body %}
 <style>
     body {
-        display: flex;
-        justify-content: center;
+        position: relative;
     }
     form {
         display: flex;
         flex-direction: column;
         width: 50rem;
     }
+
+    .allImages {
+        position: absolute;
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        gap: 1rem;
+        align-items: center;
+        background-color: rgb(0, 0, 0, .8);
+        min-width: 100vw;
+        min-height: 100vh;
+        color: #fff;
+    }
+
+    .allImages .images {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .image {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: .5rem;
+        width: 9rem;
+    }
+    
+    .image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .selected {
+        border: 2px solid tomato;
+    }
+    
+    #imageURL {
+        display: none;
+    }
 </style>
 <form method="POST">
     {% csrf_token %}
     <input name="title" type="text" placeholder="عنوان المقال">
-    <input name="main_img" type="text" placeholder="رابط الصورة الرئيسية">
+    <button onclick="showAllImages()" type="button">الصورة الرئيسية</button>
+
+    <div class="allImages">
+        <h1>تحديد صورة</h1>
+        {{form.as_p}}
+        <div class="images">
+            {% for image in all_images %}
+            <div class="image">
+                <img src="{{ image.image.url }}" alt="image">
+                <button type="button" onclick="selectImage(this)">تحديد</button>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" onclick="addURL(this)">حفظ</button>
+    </div>
+
+    <div class="image">
+        <img class="selectedImg" src="">
+    </div>
+    
+    <input type="text" id="imageURL" name="main_img">
     <textarea name="body" cols="30" rows="10" placeholder="تفاصيل المقال"></textarea>
     <button>إضافة صور</button>
     <input type="submit" value="حفظ وإرسال">
 </form>
+
+<script>
+    const allImages = document.querySelector(".allImages")
+    
+    function showAllImages(){
+        allImages.style.display = "flex"
+    }
+
+    function selectImage(item){
+        localStorage.setItem("imageURL", item.previousElementSibling.src)
+        const image = item.previousElementSibling
+        document.querySelectorAll("img").forEach(one => one.classList.remove("selected"))
+        if(image.classList.contains("selected")){
+            image.classList.remove("selected")
+        } else {
+            image.classList.add("selected")
+        }
+    }
+
+    function addURL(item){
+        item.parentElement.style.display = "none"
+        const url = localStorage.getItem("imageURL")
+        if(url != null){
+            document.querySelector(".selectedImg").src = url
+            document.getElementById("imageURL").value = url
+        }
+        localStorage.clear()
+    }
+</script>
 {% endblock %}

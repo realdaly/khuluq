@@ -23,6 +23,9 @@ def images(request):
 
 # -------------------------------- Create ----------------------------
 def createActivity(request):
+    form = ImageForm()
+    all_images = Image.objects.all()
+
     if request.method == "POST":
         title = request.POST["title"]
         main_img = request.POST["main_img"]
@@ -30,7 +33,7 @@ def createActivity(request):
 
         activity = Activity.objects.create(title=title,main_img=main_img,body=body)
 
-    context = {}
+    context = {"form":form, "all_images":all_images}
     return render(request, "dashboard/activity_form.html", context)
 
 

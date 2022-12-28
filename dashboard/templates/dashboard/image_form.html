@@ -5,7 +5,7 @@
 {% block body %}
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    {{form}}
+    {{form.as_p}}
     <input type="submit" value="رفع">
 </form>
 {% endblock %}

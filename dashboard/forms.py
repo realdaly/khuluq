@@ -9,6 +9,7 @@ class ActivityForm(ModelForm):
             "title": "العنوان",
             "main_img": "الصورة الرئيسية",
             "body": "نص المقال",
+            "img_array": "تحديد صور"
         }
 
 class ImageForm(ModelForm):

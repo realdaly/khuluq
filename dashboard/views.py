@@ -23,17 +23,22 @@ def images(request):
 
 # -------------------------------- Create ----------------------------
 def createActivity(request):
-    form = ImageForm()
+    imageForm = ImageForm()
     all_images = Image.objects.all()
+    all_videos = Video.objects.all()
 
     if request.method == "POST":
         title = request.POST["title"]
-        main_img = request.POST["main_img"]
+        main_img = Image.objects.get(id=request.POST["main_img"])
         body = request.POST["body"]
+        img_array = request.POST.getlist("img_array")
+        vid_array = request.POST.getlist("vid_array")
 
-        activity = Activity.objects.create(title=title,main_img=main_img,body=body)
+        instance = Activity.objects.create(title=title,main_img=main_img,body=body)
+        instance.img_array.set(img_array)
+        instance.vid_array.set(vid_array)
 
-    context = {"form":form, "all_images":all_images}
+    context = {"imageForm":imageForm,"all_images":all_images, "all_videos":all_videos}
     return render(request, "dashboard/activity_form.html", context)
 
 

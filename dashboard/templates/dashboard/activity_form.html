@@ -5,20 +5,28 @@
 
 {% block body %}
 <style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
     body {
         position: relative;
     }
+
     form {
         display: flex;
         flex-direction: column;
         width: 50rem;
     }
 
-    .allImages {
+    .overlay {
         position: absolute;
+        top: 0;
         display: none;
         flex-direction: column;
-        justify-content: center;
+        justify-content: start;
+        align-items: center;
         gap: 1rem;
         align-items: center;
         background-color: rgb(0, 0, 0, .8);
@@ -27,9 +35,17 @@
         color: #fff;
     }
 
-    .allImages .images {
+    .overlay .images {
         display: flex;
         gap: 1rem;
+    }
+
+    .overlay .close {
+        position: absolute;
+        right: 0;
+        top: 0;
+        margin: 1rem;
+        font-size: 1.5rem;
     }
 
     .image {
@@ -38,6 +54,7 @@
         align-items: stretch;
         gap: .5rem;
         width: 9rem;
+        height: 5rem;
     }
     
     .image img {
@@ -50,65 +67,186 @@
         border: 2px solid tomato;
     }
     
-    #imageURL {
+    #imageId, #imagesId, #videosId {
         display: none;
+    }
+
+    .imageArray, .videoArray {
+        display: flex;
+        gap: 1rem;
+    }
+    
+    .videos {
+        display: flex;
+        column-gap: .5rem;
     }
 </style>
 <form method="POST">
     {% csrf_token %}
     <input name="title" type="text" placeholder="عنوان المقال">
-    <button onclick="showAllImages()" type="button">الصورة الرئيسية</button>
 
-    <div class="allImages">
-        <h1>تحديد صورة</h1>
-        {{form.as_p}}
-        <div class="images">
-            {% for image in all_images %}
-            <div class="image">
-                <img src="{{ image.image.url }}" alt="image">
-                <button type="button" onclick="selectImage(this)">تحديد</button>
-            </div>
-            {% endfor %}
-        </div>
-        <button type="button" onclick="addURL(this)">حفظ</button>
-    </div>
-
-    <div class="image">
-        <img class="selectedImg" src="">
-    </div>
+    <button onclick="openOverlay(this, 'main_img')" type="button">الصورة الرئيسية</button>
+    <input value="" type="text" id="imageId" name="main_img">
+    <div class="mainImage"></div>
     
-    <input type="text" id="imageURL" name="main_img">
     <textarea name="body" cols="30" rows="10" placeholder="تفاصيل المقال"></textarea>
-    <button>إضافة صور</button>
+
+    <button onclick="openOverlay(this, 'img_array')" type="button">إضافة صور</button>
+    <div class="imageArray"></div>
+    <select id="imagesId" name="img_array" multiple></select>
+    
+    <button onclick="openOverlay(this, 'vid_array')" type="button">إضافة فيديو</button>
+    <div class="videoArray"></div>
+    <select id="videosId" name="vid_array" multiple></select>
+
     <input type="submit" value="حفظ وإرسال">
 </form>
 
+<!-- All images overlay -->
+<div class="allImages overlay">
+    <h1>تحديد صورة</h1>
+    <div class="images">
+        {% for image in all_images %}
+        <div class="image">
+            <img onclick="saveTargetInfo(this)" data-value="{{ image.id }}" src="{{ image.image.url }}" alt="image">
+        </div>
+        {% endfor %}
+    </div>
+    <button type="button" onclick="pickSelectedTarget(this)">حفظ</button>
+    <button class="close" type="button" onclick="closeOverlay(this)">×</button>
+</div>
+
+<!-- All Videos overlay -->
+<div class="allVideos overlay">
+    <h1>تحديد فيديو</h1>
+    <div class="videos">
+        {% for video in all_videos %}
+        <div onclick="saveTargetInfo(this)" class="video" data-value="{{ video.id }}">
+            <div class="image">
+                <img src=https://img.youtube.com/vi/{{ video.vid_id }}/0.jpg alt="Video Thumbnail">
+            </div>
+            <div class="title">{{video.title}}</div>
+        </div>
+        {% endfor %}
+    </div>
+    <button type="button" onclick="pickSelectedTarget(this)">حفظ</button>
+    <button class="close" type="button" onclick="closeOverlay(this)">×</button>
+</div>
+
 <script>
-    const allImages = document.querySelector(".allImages")
-    
-    function showAllImages(){
-        allImages.style.display = "flex"
-    }
+    let ids = []
+    let srcs = []
+    let titles = []
 
-    function selectImage(item){
-        localStorage.setItem("imageURL", item.previousElementSibling.src)
-        const image = item.previousElementSibling
-        document.querySelectorAll("img").forEach(one => one.classList.remove("selected"))
-        if(image.classList.contains("selected")){
-            image.classList.remove("selected")
+    function openOverlay(button, field){
+        if(field == "vid_array"){
+            document.querySelector(".allVideos").style.display = "flex"
         } else {
-            image.classList.add("selected")
+            document.querySelector(".allImages").style.display = "flex"
+        }
+
+        localStorage.setItem("field", field)
+    }
+
+    function closeOverlay(item){
+        document.querySelectorAll(".selected").forEach(one => one.classList.remove("selected"))
+        item.parentElement.style.display = "none"
+        localStorage.clear()
+        ids = []
+        srcs = []
+        titles = []
+    }
+
+    function saveTargetInfo(target){
+        let field = localStorage.getItem("field")
+
+        if(field == "main_img"){
+            document.querySelectorAll(".allImages img").forEach(one => one.classList.remove("selected"))
+
+            let id = target.dataset.value
+            let image_src = target.src
+            localStorage.setItem("image_id", id)
+            localStorage.setItem("image_src", image_src)
+
+        } else if(field == "img_array"){
+            ids.push(target.dataset.value)
+            srcs.push(target.src)
+
+            localStorage.setItem("images_id", JSON.stringify(ids))
+            localStorage.setItem("images_src", JSON.stringify(srcs))
+        } else if(field == "vid_array"){
+            let imageSrc = target.querySelector("img").src
+            let vidTitle = target.querySelector(".title").innerHTML
+
+            ids.push(target.dataset.value)
+            srcs.push(imageSrc)
+            titles.push(vidTitle)
+
+            localStorage.setItem("videos_id", JSON.stringify(ids))
+            localStorage.setItem("videos_src", JSON.stringify(srcs))
+            localStorage.setItem("videos_title", JSON.stringify(titles))
+        }
+
+        // Adding select effect
+        if(target.classList.contains("selected")){
+            target.classList.remove("selected")
+        } else {
+            target.classList.add("selected")
         }
     }
 
-    function addURL(item){
-        item.parentElement.style.display = "none"
-        const url = localStorage.getItem("imageURL")
-        if(url != null){
-            document.querySelector(".selectedImg").src = url
-            document.getElementById("imageURL").value = url
+    function pickSelectedTarget(target){
+        let field = localStorage.getItem("field")
+
+        if(field == "main_img"){
+            let src = localStorage.getItem("image_src")
+            let id = localStorage.getItem("image_id")
+
+            document.querySelector(".mainImage").innerHTML = 
+            `<div class="image">
+                <img src="${src}">
+            </div>`
+            document.getElementById("imageId").value = id
+
+        } else if(field == "img_array"){
+            const imageArray = document.querySelector(".imageArray")
+            const imagesId = document.getElementById("imagesId")
+            const images_src = JSON.parse(localStorage.images_src)
+            const images_id = JSON.parse(localStorage.images_id)
+
+            images_src.map(item => {
+                imageArray.innerHTML += 
+                `<div class="image">
+                    <img src="${item}">
+                </div>`
+            })
+
+            images_id.map(item => {
+                imagesId.innerHTML += `<option value="${item}" selected></option>`
+            })
+        } else if(field == "vid_array"){
+            const videoArray = document.querySelector(".videoArray")
+            const videosId = document.getElementById("videosId")
+            const videos_src = JSON.parse(localStorage.videos_src)
+            const videos_title = JSON.parse(localStorage.videos_title)
+            const videos_id = JSON.parse(localStorage.videos_id)
+
+            for(let i = 0; i < videos_title.length; i++){
+                videoArray.innerHTML += 
+                `<div class="video">
+                    <div class="image">
+                        <img src="${videos_src[i]}" alt="Video Thumbnail">
+                    </div>
+                    <div>${videos_title[i]}</div>
+                </div>`
+            }
+
+            videos_id.map(item => {
+                videosId.innerHTML += `<option value="${item}" selected></option>`
+            })
         }
-        localStorage.clear()
+
+        closeOverlay(target)
     }
 </script>
 {% endblock %}

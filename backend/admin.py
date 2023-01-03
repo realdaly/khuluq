@@ -5,3 +5,4 @@ from .models import *
 
 admin.site.register(Activity)
 admin.site.register(Image)
+admin.site.register(Video)

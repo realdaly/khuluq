@@ -9,20 +9,22 @@
 {% block body %}
 <!-- Activities -->
 <section class="activities">
-    <h1 class="title"><a class="titleLink" href="{% url 'backend:activities' %}"> نشاطات المؤسسة </a></h1>
+    <h1 class="title">
+      <a class="titleLink" href="{% url 'backend:activities' %}"> نشاطات المؤسسة </a>
+    </h1>
     <div class="container">
         {% for activity in activities %}
 
         <div class="activity">
-            <img src="{{ activity.main_img.url }}">
+            <img src="{{ activity.main_img.image.url }}">
             <div class="overlay">
               <p class="actDate">{{ activity.created_at }}</p>
               <a href="{% url 'backend:activity' activity.id %}">{{ activity.title }}</a>
             </div>
             <div class="background"></div>
-          </div
         </div>
 
         {% endfor %}
+    </div>
 </section>
 {% endblock %}

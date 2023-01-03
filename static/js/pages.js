@@ -1,30 +1,6 @@
-let videosSection
-let playlistItems
-let iframe
-
-// ------- Youtube Player -------
-function createYoutubePlayer(url){
-  const article = document.querySelector(".article")
-  article.innerHTML += 
-  `<div class="videos articleVideos">
-    <div class="playlistWrapper">
-        <div class="playlistItems">
-            <div class="items">
-            </div>
-        </div>
-        <div class="player">
-            <iframe src="${url}" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-  </div>`
-  videosSection = document.querySelector(".articleVideos")
-  iframe = videosSection.querySelector("iframe")
-
-}
-
-
 function youtubePlayer(item){
-  playlistItems = videosSection.querySelectorAll(".playlistItem")
+  let playlistItems = document.querySelectorAll(".playlistItem")
+  let iframe = document.querySelector("iframe")
   if(iframe.src != item.dataset.src){
     iframe.src = item.dataset.src
   }
@@ -39,8 +15,7 @@ function youtubePlayer(item){
 
 
 
-// ------- Image Gallery -------
-
+// ------- Image Gallery function -------
 function imageGallery(item){
   const overlay = document.querySelector(".overlay")
   const overlayImage = overlay.querySelector("img")

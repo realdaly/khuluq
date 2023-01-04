@@ -1,0 +1,12 @@
+{% extends "dashboard/layout.html" %}
+
+
+
+{% block body %}
+<form method="POST">
+    {% csrf_token %}
+    <input name="vid_id" type="text" required placeholder="ايدي الفيديو">
+    <input name="title" type="text" required placeholder="عنوان الفيديو">
+    <input type="submit" value="إضافة">
+</form>
+{% endblock %}

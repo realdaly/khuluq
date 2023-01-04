@@ -17,5 +17,6 @@ class ImageForm(ModelForm):
         model = Image
         fields = "__all__"
         labels = {
-            "image": "رفع صور "
+            "image": "رفع صور ",
+            "title": "العنوان"
         }

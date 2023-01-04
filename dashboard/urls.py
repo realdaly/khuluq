@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 
+app_name = "dashboard"
+
 urlpatterns = [
     # Display
     path("activities/", views.activities, name="activities"),
@@ -10,6 +12,8 @@ urlpatterns = [
     # Create
     path("create-activity/", views.createActivity, name="create-activity"),
     path("upload-image/", views.createImage, name="create-image"),
+    path("add-video/", views.createVideo, name="create-video"),
+    path("upload-audio/", views.createAudio, name="create-audio"),
 
 
     # Update

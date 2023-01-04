@@ -42,17 +42,17 @@
             </div>
         </div>
         
-        <div class="articleContent"><div class="articleMedia">
-        <div class="articleImage">
-            <img src="{{ activity.main_img.image.url }}" alt="صورة المقال">
+        <div class="articleContent">
+        <div class="articleMedia">
+            <div class="articleImage">
+                <img src="{{ activity.main_img.image.url }}" alt="صورة المقال">
+            </div>
+            {% if activity.audio != null %}
+            <audio src="{{activity.audio}}" controls></audio>
+            {% endif %}
         </div>
-    </div>
-    <div class="articleText">
-        {{ activity.body }}
-        <div class="test">
-            {% for vid in activity.vid_array.all %}
-            <p>{{ vid.title }}</p>
-            {% endfor %}
+        <div class="articleText">
+            {{ activity.body }}
         </div>
     </div>
 

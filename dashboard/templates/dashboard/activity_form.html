@@ -54,7 +54,11 @@
         align-items: stretch;
         gap: .5rem;
         width: 9rem;
+        max-width: 9rem;
+        min-width: 9rem;
         height: 5rem;
+        max-height: 5rem;
+        min-height: 5rem;
     }
     
     .image img {
@@ -80,6 +84,19 @@
         display: flex;
         column-gap: .5rem;
     }
+
+    .video {
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        text-align: center;
+        align-items: center;
+        width: 9rem;
+        max-width: 9rem;
+        min-width: 9rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 </style>
 <form method="POST">
     {% csrf_token %}
@@ -88,23 +105,26 @@
     <button onclick="openOverlay(this, 'main_img')" type="button">الصورة الرئيسية</button>
     <input value="" type="text" id="imageId" name="main_img">
     <div class="mainImage"></div>
+
+    <input name="audio" type="text" placeholder="رابط المقطع الصوتي">
     
     <textarea name="body" cols="30" rows="10" placeholder="تفاصيل المقال"></textarea>
 
-    <button onclick="openOverlay(this, 'img_array')" type="button">إضافة صور</button>
+    <button onclick="openOverlay(this, 'img_array')" type="button">صور إضافية</button>
     <div class="imageArray"></div>
     <select id="imagesId" name="img_array" multiple></select>
     
-    <button onclick="openOverlay(this, 'vid_array')" type="button">إضافة فيديو</button>
+    <button onclick="openOverlay(this, 'vid_array')" type="button">فيديوهات</button>
     <div class="videoArray"></div>
     <select id="videosId" name="vid_array" multiple></select>
 
-    <input type="submit" value="حفظ وإرسال">
+    <input type="submit" name="submitActivity" value="حفظ وإرسال">
 </form>
 
 <!-- All images overlay -->
 <div class="allImages overlay">
     <h1>تحديد صورة</h1>
+    <a onclick="closeOverlay(this)" href="{% url 'dashboard:create-image' %}" target="_blank"><button type="button">رفع صور</button></a>
     <div class="images">
         {% for image in all_images %}
         <div class="image">
@@ -119,11 +139,12 @@
 <!-- All Videos overlay -->
 <div class="allVideos overlay">
     <h1>تحديد فيديو</h1>
+    <a onclick="closeOverlay(this)" href="{% url 'dashboard:create-video' %}" target="_blank"><button type="button">إضافة فيديو</button></a>
     <div class="videos">
         {% for video in all_videos %}
         <div onclick="saveTargetInfo(this)" class="video" data-value="{{ video.id }}">
             <div class="image">
-                <img src=https://img.youtube.com/vi/{{ video.vid_id }}/0.jpg alt="Video Thumbnail">
+                <img src="https://img.youtube.com/vi/{{ video.vid_id }}/0.jpg" alt="Video Thumbnail">
             </div>
             <div class="title">{{video.title}}</div>
         </div>
@@ -132,6 +153,16 @@
     <button type="button" onclick="pickSelectedTarget(this)">حفظ</button>
     <button class="close" type="button" onclick="closeOverlay(this)">×</button>
 </div>
+
+<!-- Image uploading form -->
+<!-- <div class="uploadImagesForm overlay">
+    <h1>رفع صور</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <input name="images" type="file" multiple required>
+        <input type="submit" name="submitImages" value="رفع">
+    </form>
+</div> -->
 
 <script>
     let ids = []

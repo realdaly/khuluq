@@ -1,0 +1,17 @@
+{% extends "dashboard/layout.html" %}
+
+
+
+{% block body %}
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input name="audio" type="file" required>
+    <input name="title" type="text" placeholder="عنوان المقطع الصوتي">
+    <input type="submit" value="رفع" href="{% url 'dashboard:create-audio' %}">
+</form>
+{% if title != null %}
+<p>{{title}}</p>
+<audio src="{{audio}}" controls></audio>
+<p><span>الرابط:</span>{{audio}}</p>
+{% endif %}
+{% endblock %}

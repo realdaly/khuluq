@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 
 from backend.models import *
-# from .forms import *
+from .forms import *
 
 # -------------------------------- Display ----------------------------
 def activities(request):
@@ -25,20 +25,26 @@ def images(request):
 def createActivity(request):
     all_images = Image.objects.all()
     all_videos = Video.objects.all()
+    message = ""
 
     if request.method == "POST":
         title = request.POST["title"]
-        main_img = Image.objects.get(id=request.POST["main_img"])
-        audio = request.POST["audio"]
+        init_main_img = request.POST["main_img"]
         body = request.POST["body"]
+        audio = request.POST["audio"]
         img_array = request.POST.getlist("img_array")
         vid_array = request.POST.getlist("vid_array")
 
-        instance = Activity.objects.create(title=title,main_img=main_img,audio=audio,body=body)
-        instance.img_array.set(img_array)
-        instance.vid_array.set(vid_array)
+        if(title != "" and init_main_img != "" and body != ""):
+            main_img = Image.objects.get(id=init_main_img)
+            instance = Activity.objects.create(title=title,main_img=main_img,audio=audio,body=body)
+            instance.img_array.set(img_array)
+            instance.vid_array.set(vid_array)
+            message = "تم"
+        else:
+            message = "الرجاء ملئ جميع الحقول المطلوبة"
 
-    context = {"all_images":all_images, "all_videos":all_videos}
+    context = {"message":message,"all_images":all_images, "all_videos":all_videos}
     return render(request, "dashboard/activity_form.html", context)
 
 
@@ -84,15 +90,30 @@ def createAudio(request):
     return render(request, "dashboard/audio_form.html", context)
 # -------------------------------- Update ----------------------------
 def updateActivity(request, pk):
-    pass
-    # activity = Activity.objects.get(id=pk)
-    # form = ActivityForm(instance=activity)
+    all_images = Image.objects.all()
+    all_videos = Video.objects.all()
+    message = ""
 
-    # if request.method == "POST":
-    #     form = ActivityForm(request.POST, instance=activity)
-    #     if form.is_valid():
-    #         form.save()
-    #         return redirect("activities")
+    activity = Activity.objects.get(id=pk)
+    form = ActivityForm(instance=activity)
+    title = activity.title
+    main_img = activity.main_img
+    audio = activity.audio
+    body = activity.body
+    img_array = activity.img_array.all
+    vid_array = activity.vid_array.all
 
-    # context = {"form":form}
-    # return render(request, "dashboard/activity_form.html", context)
+    data = {"title":title,"main_img":main_img,"audio":audio,"body":body,"img_array":img_array,"vid_array":vid_array}
+    # image = Image.objects.get(id=form.main_img.value)
+
+    print(data)
+
+    if request.method == "POST":
+        form = ActivityForm(request.POST, instance=activity)
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard:activities")
+        else:
+            message = "Form is not valid"
+    context = {"message":message,"all_images":all_images,"data":data}
+    return render(request, "dashboard/activity_form.html", context)

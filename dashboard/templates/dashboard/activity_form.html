@@ -35,6 +35,10 @@
         color: #fff;
     }
 
+    .overlayOpen {
+        display: flex;
+    }
+
     .overlay .images {
         display: flex;
         gap: 1rem;
@@ -100,26 +104,60 @@
 </style>
 <form method="POST">
     {% csrf_token %}
-    <input name="title" type="text" placeholder="عنوان المقال">
+    <input value="{{data.title}}" name="title" type="text" placeholder="عنوان المقال">
 
     <button onclick="openOverlay(this, 'main_img')" type="button">الصورة الرئيسية</button>
-    <input value="" type="text" id="imageId" name="main_img">
-    <div class="mainImage"></div>
+    <input value="{{data.main_img.id}}" type="text" id="imageId" name="main_img">
+    <div class="mainImage">
+        {% if data %}
+        <div class="image">
+            <img src="{{data.main_img.image.url}}">
+            <!-- <p>{{data.img_array}}</p> -->
+        </div>
+        {% endif %}
+    </div>
 
-    <input name="audio" type="text" placeholder="رابط المقطع الصوتي">
+    <input value="{{data.audio}}" name="audio" type="text" placeholder="رابط المقطع الصوتي">
     
-    <textarea name="body" cols="30" rows="10" placeholder="تفاصيل المقال"></textarea>
+    <textarea name="body" cols="30" rows="10" placeholder="تفاصيل المقال">{{data.body}}</textarea>
 
     <button onclick="openOverlay(this, 'img_array')" type="button">صور إضافية</button>
-    <div class="imageArray"></div>
-    <select id="imagesId" name="img_array" multiple></select>
+    <div class="imageArray">
+        {% if data %}
+            {% for image in data.img_array %}
+            <div class="image">
+                <img src="{{image.image.url}}">
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <select id="imagesId" name="img_array" multiple>
+        {% if data %}
+            {% for image in data.img_array %}
+                <option value="{{image.id}}" selected></option>
+            {% endfor %}
+        {% endif %}
+    </select>
     
     <button onclick="openOverlay(this, 'vid_array')" type="button">فيديوهات</button>
     <div class="videoArray"></div>
-    <select id="videosId" name="vid_array" multiple></select>
+    <select id="videosId" name="vid_array" multiple>
+        <!-- {% if data %}
+        <option value="${item}" selected></option>
+        {% endif %} -->
+    </select>
 
-    <input type="submit" name="submitActivity" value="حفظ وإرسال">
+    <input type="submit" value="حفظ وإرسال">
 </form>
+
+<!-- Message overlay -->
+{% if message %}
+<div class="overlay overlayOpen">
+    <h1>{{message}}</h1>
+    <button class="close" type="button" onclick="closeOverlay(this)">×</button>
+</div>
+{% endif %}
 
 <!-- All images overlay -->
 <div class="allImages overlay">
@@ -245,6 +283,7 @@
             const images_src = JSON.parse(localStorage.images_src)
             const images_id = JSON.parse(localStorage.images_id)
 
+            imageArray.innerHTML = "" 
             images_src.map(item => {
                 imageArray.innerHTML += 
                 `<div class="image">
@@ -252,6 +291,7 @@
                 </div>`
             })
 
+            imagesId.innerHTML = ""
             images_id.map(item => {
                 imagesId.innerHTML += `<option value="${item}" selected></option>`
             })

@@ -47,7 +47,7 @@
             <div class="articleImage">
                 <img src="{{ activity.main_img.image.url }}" alt="صورة المقال">
             </div>
-            {% if activity.audio != null %}
+            {% if activity.audio %}
             <audio src="{{activity.audio}}" controls></audio>
             {% endif %}
         </div>
@@ -68,7 +68,7 @@
 
         </div>
 
-        {% if activity.vid_array != null %}
+        {% if activity.vid_array.all %}
             <div class="videos articleVideos">
                 <div class="playlistWrapper">
                     <div class="playlistItems">

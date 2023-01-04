@@ -8,12 +8,12 @@
     <h1>النشاطات</h1>
     {% for activity in activities %}
     <div>
-        <p>{{ activity.title }}</p><a href="{% url 'update-activity' activity.id %}">تعديل</a>
+        <p>{{ activity.title }}</p><a href="{% url 'dashboard:update-activity' activity.id %}">تعديل</a>
     </div>
     {% empty %}
     <p>لا توجد عناصر.</p>
     {% endfor %}
-    <a href="{% url 'create-activity' %}">إضافة نشاط</a>
+    <a href="{% url 'dashboard:create-activity' %}">إضافة نشاط</a>
 </body>
 </html>
 {% endblock %}

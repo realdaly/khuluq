@@ -6,6 +6,6 @@ app_name = "backend"
 urlpatterns = [
     path("", views.home, name="home"),
 
-    path("activities/", views.activities, name="activities"),
+    path("activities", views.activities, name="activities"),
     path("activity/<str:pk>", views.activity, name="activity")
 ]

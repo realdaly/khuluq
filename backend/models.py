@@ -21,8 +21,8 @@ class Audio(models.Model):
 
 
 class Video(models.Model):
-    vid_id = models.CharField(max_length=5000)
-    title = models.CharField(max_length=1000)
+    vid_id = models.CharField(max_length=5000, blank=False)
+    title = models.CharField(max_length=1000, blank=False)
 
     def __str__(self):
         return f"{self.title}"
@@ -31,10 +31,10 @@ class Video(models.Model):
 
 
 class Activity(models.Model):
-    title = models.CharField(max_length=1000)
+    title = models.CharField(max_length=1000, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    main_img = models.ForeignKey(Image, on_delete=models.PROTECT, related_name="mainImage")
-    body = models.TextField(max_length=5000)
+    main_img = models.ForeignKey(Image, on_delete=models.PROTECT, blank=False)
+    body = models.TextField(max_length=5000, blank=False)
     img_array = models.ManyToManyField(Image, blank=True, related_name="images")
     vid_array = models.ManyToManyField(Video, blank=True, related_name="videos")
     audio = models.CharField(max_length=1000, blank=True)

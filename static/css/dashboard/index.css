@@ -1,0 +1,28 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dashItem {
+    display: grid;
+    place-items: center;
+    background-color: #bada55;
+    padding: 3rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    color: #000;
+}
+
+.dashItemLite {
+    background-color: #daff62;
+}
+
+.dashItem:hover {
+    opacity: .8;
+}
+
+.dashItem img {
+    width: 5rem;
+}

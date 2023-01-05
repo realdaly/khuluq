@@ -1,0 +1,24 @@
+{% extends "dashboard/layout.html" %}
+{% load static %}
+
+{% block extraHead %}
+<link rel="stylesheet" href="{% static 'css/dashboard/index.css' %}">
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+    <a href="{% url 'dashboard:activities' %}" class="dashItem">
+        <img src="{% static 'icons/activity.svg' %}" alt="نشاطات المؤسسة">
+        <p>نشاطات المؤسسة</p>
+    </a href="{% url 'dashboard:activities' %}">
+
+    <div class="dashItem dashItemLite">
+        <img src="{% static 'icons/product.svg' %}" alt="نتاجات المؤسسة">
+        <p>نتاجات المؤسسة</p>
+    </div>
+
+</div>
+
+{% endblock %}

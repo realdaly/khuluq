@@ -141,11 +141,24 @@
     </select>
     
     <button onclick="openOverlay(this, 'vid_array')" type="button">فيديوهات</button>
-    <div class="videoArray"></div>
+    <div class="videoArray">
+        {% if data %}
+            {% for video in data.vid_array %}
+            <div class="video">
+                <div class="image">
+                    <img src="https://img.youtube.com/vi/{{video.vid_id}}/0.jpg" alt="Video Thumbnail">
+                </div>
+                <div>{{video.title}}</div>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
     <select id="videosId" name="vid_array" multiple>
-        <!-- {% if data %}
-        <option value="${item}" selected></option>
-        {% endif %} -->
+        {% if data %}
+            {% for video in data.vid_array %}
+            <option value="{{video.id}}" selected></option>
+            {% endfor %}
+        {% endif %}
     </select>
 
     <input type="submit" value="حفظ وإرسال">
@@ -302,6 +315,7 @@
             const videos_title = JSON.parse(localStorage.videos_title)
             const videos_id = JSON.parse(localStorage.videos_id)
 
+            videoArray.innerHTML = "" 
             for(let i = 0; i < videos_title.length; i++){
                 videoArray.innerHTML += 
                 `<div class="video">
@@ -312,6 +326,7 @@
                 </div>`
             }
 
+            videosId.innerHTML = ""
             videos_id.map(item => {
                 videosId.innerHTML += `<option value="${item}" selected></option>`
             })

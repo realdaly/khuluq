@@ -4,11 +4,18 @@ from backend.models import *
 from .forms import *
 
 # -------------------------------- Display ----------------------------
+def index(request):
+    context = {}
+    return render(request, "dashboard/index.html", context)
+
+
+
+
 def activities(request):
     activities = Activity.objects.all()
 
     context = {"activities":activities}
-    return render(request, "dashboard/activities.html", context)
+    return render(request, "dashboard/activities/activities.html", context)
 
 
 
@@ -40,12 +47,12 @@ def createActivity(request):
             instance = Activity.objects.create(title=title,main_img=main_img,audio=audio,body=body)
             instance.img_array.set(img_array)
             instance.vid_array.set(vid_array)
-            message = "تم"
+            return redirect("dashboard:activities")
         else:
             message = "الرجاء ملئ جميع الحقول المطلوبة"
 
     context = {"message":message,"all_images":all_images, "all_videos":all_videos}
-    return render(request, "dashboard/activity_form.html", context)
+    return render(request, "dashboard/activities/activity_form.html", context)
 
 
 
@@ -88,6 +95,10 @@ def createAudio(request):
 
     context = {}
     return render(request, "dashboard/audio_form.html", context)
+
+
+
+
 # -------------------------------- Update ----------------------------
 def updateActivity(request, pk):
     all_images = Image.objects.all()
@@ -104,9 +115,6 @@ def updateActivity(request, pk):
     vid_array = activity.vid_array.all
 
     data = {"title":title,"main_img":main_img,"audio":audio,"body":body,"img_array":img_array,"vid_array":vid_array}
-    # image = Image.objects.get(id=form.main_img.value)
-
-    print(data)
 
     if request.method == "POST":
         form = ActivityForm(request.POST, instance=activity)
@@ -115,5 +123,20 @@ def updateActivity(request, pk):
             return redirect("dashboard:activities")
         else:
             message = "Form is not valid"
-    context = {"message":message,"all_images":all_images,"data":data}
-    return render(request, "dashboard/activity_form.html", context)
+
+    context = {"message":message,"all_images":all_images,"all_videos":all_videos,"data":data}
+    return render(request, "dashboard/activities/activity_form.html", context)
+
+
+
+
+# -------------------------------- Delete ----------------------------
+def deleteActivity(request, pk):
+    activity = Activity.objects.get(id=pk)
+
+    if request.method == "POST":
+        activity.delete()
+        return redirect("dashboard:activities")
+
+    context = {"item":activity}
+    return render(request, "dashboard/delete.html", context)

@@ -1,0 +1,16 @@
+{% extends "dashboard/layout.html" %}
+
+
+
+{% block body %}
+
+<p>هل انت متأكد من حذف النشاط "{{item}}"؟</p>
+<form method="POST">
+    {% csrf_token %}
+    <script>
+        document.write('<a href="' + document.referrer + '">الغاء</a>');
+    </script>    
+    <input type="submit" value="تأكيد">
+</form>
+
+{% endblock %}

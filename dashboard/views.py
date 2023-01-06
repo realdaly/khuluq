@@ -36,17 +36,18 @@ def createActivity(request):
 
     if request.method == "POST":
         title = request.POST["title"]
-        init_main_img = request.POST["main_img"]
+        main_img = Image.objects.get(id=request.POST["main_img"])
         body = request.POST["body"]
         audio = request.POST["audio"]
         img_array = request.POST.getlist("img_array")
         vid_array = request.POST.getlist("vid_array")
 
-        if(title != "" and init_main_img != "" and body != ""):
-            main_img = Image.objects.get(id=init_main_img)
-            instance = Activity.objects.create(title=title,main_img=main_img,audio=audio,body=body)
-            instance.img_array.set(img_array)
-            instance.vid_array.set(vid_array)
+        data = {"title":title,"main_img":main_img,"body":body,"audio":audio,"img_array":img_array,"vid_array":vid_array}
+
+        form = ActivityForm(data)
+
+        if form.is_valid():
+            form.save()
             return redirect("dashboard:activities")
         else:
             message = "الرجاء ملئ جميع الحقول المطلوبة"

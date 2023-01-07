@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from backend.models import *
 from .forms import *
 
-# -------------------------------- Display ----------------------------
+# -------------------------------- Read ----------------------------
 def index(request):
     context = {}
     return render(request, "dashboard/index.html", context)
@@ -13,11 +13,17 @@ def index(request):
 
 def activities(request):
     activities = Activity.objects.all()
+    section = {"activities":"activities"}
 
-    context = {"activities":activities}
+    context = {"items":activities,"section":section}
     return render(request, "dashboard/items.html", context)
 
 
+def productions(request):
+    productions = Production.objects.all()
+    section = {"productions":"productions"}
+    context = {"items":productions,"section":section}
+    return render(request, "dashboard/items.html", context)
 
 
 def images(request):
@@ -33,6 +39,7 @@ def createActivity(request):
     all_images = Image.objects.all()
     all_videos = Video.objects.all()
     message = ""
+    section = {"max":True}
 
     if request.method == "POST":
         title = request.POST["title"]
@@ -52,7 +59,30 @@ def createActivity(request):
         else:
             message = "الرجاء ملئ جميع الحقول المطلوبة"
 
-    context = {"message":message,"all_images":all_images, "all_videos":all_videos}
+    context = {"section":section,"message":message,"all_images":all_images, "all_videos":all_videos}
+    return render(request, "dashboard/forms/create_form.html", context)
+
+
+def createProduction(request):
+    all_images = Image.objects.all()
+    message = ""
+
+    if request.method == "POST":
+        title = request.POST["title"]
+        main_img = Image.objects.get(id=request.POST["main_img"])
+        body = request.POST["body"]
+
+        data = {"title":title,"main_img":main_img,"body":body}
+
+        form = ProductionForm(data)
+
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard:productions")
+        else:
+            message = "الرجاء ملئ جميع الحقول المطلوبة"
+
+    context = {"message":message,"all_images":all_images}
     return render(request, "dashboard/forms/create_form.html", context)
 
 
@@ -102,6 +132,7 @@ def createAudio(request):
 
 # -------------------------------- Update ----------------------------
 def updateActivity(request, pk):
+    section = {"max":True}
     all_images = Image.objects.all()
     all_videos = Video.objects.all()
     message = ""
@@ -125,7 +156,31 @@ def updateActivity(request, pk):
         else:
             message = "Form is not valid"
 
-    context = {"message":message,"all_images":all_images,"all_videos":all_videos,"data":data}
+    context = {"section":section,"message":message,"all_images":all_images,"all_videos":all_videos,"data":data}
+    return render(request, "dashboard/forms/create_form.html", context)
+
+
+def updateProduction(request, pk):
+    all_images = Image.objects.all()
+    message = ""
+
+    production = Production.objects.get(id=pk)
+    form = ProductionForm(instance=production)
+    title = production.title
+    main_img = production.main_img
+    body = production.body
+
+    data = {"title":title,"main_img":main_img,"body":body}
+
+    if request.method == "POST":
+        form = ProductionForm(request.POST, instance=production)
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard:productions")
+        else:
+            message = "Form is not valid"
+
+    context = {"message":message,"all_images":all_images,"data":data}
     return render(request, "dashboard/forms/create_form.html", context)
 
 
@@ -140,4 +195,15 @@ def deleteActivity(request, pk):
         return redirect("dashboard:activities")
 
     context = {"item":activity}
+    return render(request, "dashboard/delete.html", context)
+
+
+def deleteProduction(request, pk):
+    production = Production.objects.get(id=pk)
+
+    if request.method == "POST":
+        production.delete()
+        return redirect("dashboard:productions")
+
+    context = {"item":production}
     return render(request, "dashboard/delete.html", context)

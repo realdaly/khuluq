@@ -6,14 +6,16 @@ from hitcount.views import HitCountMixin
 
 from .models import *
 
-# Create your views here.
+# Create your views here
 def home(request):
     activities = Activity.objects.all()[:5]
+    productions =  Production.objects.all()
 
-    context = {"activities":activities}
+    context = {"activities":activities,"productions":productions}
     return render(request, "backend/home.html", context)
 
 
+# Section views
 def activities(request):
     activities = Activity.objects.all()
 
@@ -30,6 +32,7 @@ def productions(request):
 
 
 
+# Article views
 def activity(request, pk):
     activity = Activity.objects.get(id=pk)
     section = {"activities":"activities"}

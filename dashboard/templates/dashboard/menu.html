@@ -16,10 +16,10 @@
             <p>السلايدر</p>
         </div>
 
-        <div class="dashItem">
+        <a href="{% url 'dashboard:productions' %}" class="dashItem">
             <img src="{% static 'icons/product.svg' %}" alt="نتاجات المؤسسة">
             <p>نتاجات المؤسسة</p>
-        </div>
+        </a>
         
         <a href="{% url 'dashboard:activities' %}" class="dashItem">
             <img src="{% static 'icons/activity.svg' %}" alt="نشاطات المؤسسة">

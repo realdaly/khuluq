@@ -63,10 +63,12 @@
         </div>
     </div>
 
+        {% if item.img_array.all %}
+
         <div class="imageGallery">
 
             <div class="gallery">
-                {% for image in activity.img_array.all %}
+                {% for image in item.img_array.all %}
                 <div onclick="imageGallery(this)" class="img">
                     <img src="{{image.image.url}}" alt="صورة">
                 </div>
@@ -75,7 +77,9 @@
 
         </div>
 
-        {% if item.vid_array %}
+        {% endif %}
+
+        {% if item.vid_array.all %}
             <div class="videos articleVideos">
                 <div class="playlistWrapper">
                     <div class="playlistItems">

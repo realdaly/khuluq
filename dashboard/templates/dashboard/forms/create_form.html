@@ -110,11 +110,13 @@
 </style>
 <form method="POST" class="items">
     {% csrf_token %}
-    <input class="input" value="{{data.title}}" name="title" type="text" placeholder="عنوان المقال">
+    <input class="input" value="{{data.title}}" name="title" type="text" placeholder="العنوان">
     
+    {% if section.max %}
     <input class="input" value="{{data.audio}}" name="audio" type="text" placeholder="رابط المقطع الصوتي">
+    {% endif %}
     
-    <textarea name="body" placeholder="تفاصيل المقال" id="editor">{{data.body|safe}}</textarea>
+    <textarea name="body" placeholder="التفاصيل" id="editor">{{data.body|safe}}</textarea>
     
     <button onclick="openOverlay(this, 'main_img')" type="button">الصورة الرئيسية</button>
     <input value="{{data.main_img.id}}" type="text" id="imageId" name="main_img">
@@ -127,7 +129,7 @@
     </div>
 
     
-
+    {% if section.max %}
     <button onclick="openOverlay(this, 'img_array')" type="button">صور إضافية</button>
     <div class="imageArray">
         {% if data.img_array %}
@@ -146,7 +148,9 @@
             {% endfor %}
         {% endif %}
     </select>
+    {% endif %}
     
+    {% if section.max %}
     <button onclick="openOverlay(this, 'vid_array')" type="button">فيديوهات</button>
     <div class="videoArray">
         {% if data.vid_array %}
@@ -167,6 +171,7 @@
             {% endfor %}
         {% endif %}
     </select>
+    {% endif %}
 
     <input type="submit" value="حفظ وإرسال">
 </form>

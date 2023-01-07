@@ -6,6 +6,12 @@ class ActivityForm(ModelForm):
         model = Activity
         fields = "__all__"
 
+
+class ProductionForm(ModelForm):
+    class Meta:
+        model = Production
+        fields = "__all__"
+
 class ImageForm(ModelForm):
     class Meta:
         model = Image

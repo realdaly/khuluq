@@ -4,6 +4,8 @@
 
 {% block extraHead %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
+<script src="{% static 'js/home.js' %}" defer></script>
+<script src="{% static 'js/swiper .js' %}" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -18,7 +20,7 @@
         <div class="activity">
             <img src="{{ activity.main_img.image.url }}">
             <div class="overlay">
-              <p class="actDate">{{ activity.created_at }}</p>
+              <p class="actDate">{{ activity.created_at|date:"Y-m-d" }}</p>
               <a href="{% url 'backend:activity' activity.id %}">{{ activity.title }}</a>
             </div>
             <div class="background"></div>
@@ -26,5 +28,53 @@
 
         {% endfor %}
     </div>
+</section>
+
+<section class="productions">
+  <p class="title"><a class="titleLink" href="./productions"> نتاجات المؤسسة </a></p>
+  <div class="main">
+      <div class="titleContainer">
+          {% for production in productions %}
+          <input id="title{{production.id}}" type="radio" name="tabs" 
+          {% if forloop.first %}
+          checked
+          {% endif %}
+          >
+          <label onclick="showTab(this.dataset.tab)" for="title{{production.id}}" data-tab="tab{{production.id}}">{{production.title}}</label>
+          {% endfor %}
+      </div>
+
+      <div class="sections">
+        {% for production in productions %}
+        <section id="tab{{ production.id }}">
+          <div class="img">
+            <a href="{% url 'backend:production' production.id %}"><img src="{{ production.main_img.image.url }}" alt="{{ production.title }}"></a>
+          </div>
+          <p>
+            {{ production.body|striptags }}
+          </p>
+        </section>
+        {% endfor %}
+      </div>
+      
+  </div>
+</section>
+
+
+<!-- Book Library -->
+<section class="library" id="library">
+  <p class="title"><a class="titleLink" href="./eLibrary"> المكتبة الرقمية </a></p>
+  <div class="booksContainer">
+      <div class="book skeleton">
+      </div>
+      <div class="book skeleton">
+      </div>
+      <div class="book skeleton">
+      </div>
+      <div class="book skeleton">
+      </div>
+      <div class="book skeleton">
+      </div>
+  </div>    
 </section>
 {% endblock %}

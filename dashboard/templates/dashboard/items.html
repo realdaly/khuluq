@@ -4,20 +4,26 @@
 
 
 {% block body %}
-<body>
     {% include "dashboard/menu.html" %}
 
-
-    {% if activities %}
     <div class="items">
-        <h1 class="itemsTitle">النشاطات</h1>
+        {% if section.activities %}
+        <h1 class="itemsTitle">نشاطات المؤسسة</h1>
+        {% elif section.productions %}
+        <h1 class="itemsTitle">نتاجات المؤسسة</h1>
+        {% endif %}
         <div class="itemsContainer">
-            {% for activity in activities %}
+            {% for item in items %}
             <div class="item">
-                <p>{{ activity.title }}</p>
+                <p>{{ item.title }}</p>
                 <div class="buttons">
-                    <a class="button" href="{% url 'dashboard:update-activity' activity.id %}">تعديل</a>
-                    <a class="button buttonDanger" href="{% url 'dashboard:delete-activity' activity.id %}">حذف</a>
+                    {% if section.activities %}
+                    <a class="button" href="{% url 'dashboard:update-activity' item.id %}">تعديل</a>
+                    <a class="button buttonDanger" href="{% url 'dashboard:delete-activity' item.id %}">حذف</a>
+                    {% elif section.productions %}
+                    <a class="button" href="{% url 'dashboard:update-production' item.id %}">تعديل</a>
+                    <a class="button buttonDanger" href="{% url 'dashboard:delete-production' item.id %}">حذف</a>
+                    {% endif %}
                 </div>
             </div>
             
@@ -25,9 +31,11 @@
             <p>لا توجد عناصر.</p>
             {% endfor %}
         </div>
+        {% if section.activities %}
         <a class="button buttonPrimary" href="{% url 'dashboard:create-activity' %}">إضافة نشاط</a>
+        {% elif section.productions %}
+        <a class="button buttonPrimary" href="{% url 'dashboard:create-production' %}">إضافة نتاج</a>
+        {% endif %}
     </div>
-    {% endif %}
-</body>
-</html>
+    
 {% endblock %}

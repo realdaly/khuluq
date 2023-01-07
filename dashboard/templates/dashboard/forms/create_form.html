@@ -7,6 +7,8 @@
 
 
 {% block body %}
+{% include "dashboard/menu.html" %}
+
 <style>
     * {
         margin: 0;
@@ -26,6 +28,7 @@
     .overlay {
         position: absolute;
         top: 0;
+        z-index: 3;
         display: none;
         flex-direction: column;
         justify-content: start;
@@ -105,28 +108,29 @@
         text-overflow: ellipsis;
     }
 </style>
-<form method="POST">
+<form method="POST" class="items">
     {% csrf_token %}
-    <input value="{{data.title}}" name="title" type="text" placeholder="عنوان المقال">
-
+    <input class="input" value="{{data.title}}" name="title" type="text" placeholder="عنوان المقال">
+    
+    <input class="input" value="{{data.audio}}" name="audio" type="text" placeholder="رابط المقطع الصوتي">
+    
+    <textarea name="body" placeholder="تفاصيل المقال" id="editor">{{data.body|safe}}</textarea>
+    
     <button onclick="openOverlay(this, 'main_img')" type="button">الصورة الرئيسية</button>
     <input value="{{data.main_img.id}}" type="text" id="imageId" name="main_img">
     <div class="mainImage">
-        {% if data %}
+        {% if data.main_img %}
         <div class="image">
             <img src="{{data.main_img.image.url}}">
-            <!-- <p>{{data.img_array}}</p> -->
         </div>
         {% endif %}
     </div>
 
-    <input value="{{data.audio}}" name="audio" type="text" placeholder="رابط المقطع الصوتي">
     
-    <textarea name="body" placeholder="تفاصيل المقال" id="editor">{{data.body|safe}}</textarea>
 
     <button onclick="openOverlay(this, 'img_array')" type="button">صور إضافية</button>
     <div class="imageArray">
-        {% if data %}
+        {% if data.img_array %}
             {% for image in data.img_array %}
             <div class="image">
                 <img src="{{image.image.url}}">
@@ -136,7 +140,7 @@
     </div>
     
     <select id="imagesId" name="img_array" multiple>
-        {% if data %}
+        {% if data.img_array %}
             {% for image in data.img_array %}
                 <option value="{{image.id}}" selected></option>
             {% endfor %}
@@ -145,7 +149,7 @@
     
     <button onclick="openOverlay(this, 'vid_array')" type="button">فيديوهات</button>
     <div class="videoArray">
-        {% if data %}
+        {% if data.vid_array %}
             {% for video in data.vid_array %}
             <div class="video">
                 <div class="image">
@@ -157,7 +161,7 @@
         {% endif %}
     </div>
     <select id="videosId" name="vid_array" multiple>
-        {% if data %}
+        {% if data.vid_array %}
             {% for video in data.vid_array %}
             <option value="{{video.id}}" selected></option>
             {% endfor %}

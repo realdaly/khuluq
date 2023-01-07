@@ -1,0 +1,33 @@
+{% extends "dashboard/layout.html" %}
+
+
+
+
+{% block body %}
+<body>
+    {% include "dashboard/menu.html" %}
+
+
+    {% if activities %}
+    <div class="items">
+        <h1 class="itemsTitle">النشاطات</h1>
+        <div class="itemsContainer">
+            {% for activity in activities %}
+            <div class="item">
+                <p>{{ activity.title }}</p>
+                <div class="buttons">
+                    <a class="button" href="{% url 'dashboard:update-activity' activity.id %}">تعديل</a>
+                    <a class="button buttonDanger" href="{% url 'dashboard:delete-activity' activity.id %}">حذف</a>
+                </div>
+            </div>
+            
+            {% empty %}
+            <p>لا توجد عناصر.</p>
+            {% endfor %}
+        </div>
+        <a class="button buttonPrimary" href="{% url 'dashboard:create-activity' %}">إضافة نشاط</a>
+    </div>
+    {% endif %}
+</body>
+</html>
+{% endblock %}

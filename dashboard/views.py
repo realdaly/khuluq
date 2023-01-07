@@ -15,7 +15,7 @@ def activities(request):
     activities = Activity.objects.all()
 
     context = {"activities":activities}
-    return render(request, "dashboard/activities/activities.html", context)
+    return render(request, "dashboard/items.html", context)
 
 
 
@@ -53,7 +53,7 @@ def createActivity(request):
             message = "الرجاء ملئ جميع الحقول المطلوبة"
 
     context = {"message":message,"all_images":all_images, "all_videos":all_videos}
-    return render(request, "dashboard/activities/activity_form.html", context)
+    return render(request, "dashboard/forms/create_form.html", context)
 
 
 
@@ -126,7 +126,7 @@ def updateActivity(request, pk):
             message = "Form is not valid"
 
     context = {"message":message,"all_images":all_images,"all_videos":all_videos,"data":data}
-    return render(request, "dashboard/activities/activity_form.html", context)
+    return render(request, "dashboard/forms/create_form.html", context)
 
 
 

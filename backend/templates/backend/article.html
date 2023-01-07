@@ -24,35 +24,42 @@
     <div class="path">
         <p class="component"><a href="{% url 'backend:home' %}"> الصفحة الرئيسية </a></p>
         <p class="pathArrow"> &#xbb; </p>
+        {% if section.activities %}
         <p class="component"><a href="{% url 'backend:activities' %}"> نشاطات المؤسسة </a></p>
+        <p id="articleURL" class="component"><a href="{% url 'backend:activity' item.id %}">
+        {% elif section.productions %}
+        <p class="component"><a href="{% url 'backend:productions' %}"> نتاجات المؤسسة </a></p>
+        <p id="articleURL" class="component"><a href="{% url 'backend:production' item.id %}">
+        {% endif %}
         <p class="pathArrow"> &#xbb; </p>
-        <p id="articleURL" class="component"><a href="{% url 'backend:activity' activity.id %}">
-            {{ activity.title }}
+            {{ item.title }}
         </a></p>
     </div>
     <div class="article">
         <div class="articleDetails">
             <p class="articleTitle">
-                {{ activity.title }}
+            {{ item.title }}
             </p>
             <div class="statistics">
-            <p class="date">{{ activity.created_at }}</p>
+            <p class="date">
+            {{ item.created_at|date:"Y-m-d" }}
+            </p>
             <div class="horizontalLine">|</div>
-            <p class="views"> الزيارات: <span>33</span></p>
+            <p class="views"> الزيارات: <span>{{hitcount.total_hits}}</span></p>
             </div>
         </div>
         
         <div class="articleContent">
         <div class="articleMedia">
             <div class="articleImage">
-                <img src="{{ activity.main_img.image.url }}" alt="صورة المقال">
+                <img src="{{ item.main_img.image.url }}" alt="صورة المقال">
             </div>
-            {% if activity.audio %}
-            <audio src="{{activity.audio}}" controls></audio>
+            {% if item.audio %}
+            <audio src="{{item.audio}}" controls></audio>
             {% endif %}
         </div>
         <div class="articleText">
-            {{ activity.body|safe }}
+            {{ item.body|safe }}
         </div>
     </div>
 
@@ -68,12 +75,12 @@
 
         </div>
 
-        {% if activity.vid_array.all %}
+        {% if item.vid_array %}
             <div class="videos articleVideos">
                 <div class="playlistWrapper">
                     <div class="playlistItems">
                         <div class="items">
-                            {% for vid in activity.vid_array.all %}
+                            {% for vid in item.vid_array.all %}
                             <div onclick="youtubePlayer(this)" class="playlistItem" data-src="https://www.youtube.com/embed/{{vid.vid_id}}?rel=0">
                                 <img src="https://img.youtube.com/vi/{{vid.vid_id}}/0.jpg" alt="صورة مصغرة">
                                 <p>{{vid.title}}</p>
@@ -82,7 +89,7 @@
                         </div>
                     </div>
                     <div class="player">
-                        <iframe src="https://www.youtube.com/embed/{{activity.vid_array.all.first.vid_id}}?rel=0" frameborder="0" allowfullscreen></iframe>
+                        <iframe src="https://www.youtube.com/embed/{{item.vid_array.all.first.vid_id}}?rel=0" frameborder="0" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>

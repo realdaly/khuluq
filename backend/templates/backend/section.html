@@ -1,0 +1,78 @@
+{% extends "backend/layout.html" %}
+{% load static %}
+
+
+{% block extraHead %}
+<link rel="stylesheet" href="{% static 'css/pages.css' %}">
+{% endblock %}
+
+
+{% block body %}
+<main>
+    <div class="path">
+        <p class="component"><a href="{% url 'backend:home' %}"> الصفحة الرئيسية </a></p>
+        <p class="pathArrow"> &#xbb; </p>
+        <p class="component">
+            {% if activities %}
+            <a href="{% url 'backend:activities' %}"> نشاطات المؤسسة </a>
+            {% elif productions %}
+            <a href="{% url 'backend:productions' %}"> نتاجات المؤسسة </a>
+            {% endif %}
+        </p>
+    </div>
+    
+    <div class="pageContainer 
+        {% if activities %}
+        itemsContainer
+        {% endif %}
+    ">
+
+        {% if activities %}
+        
+            {% for activity in activities %}
+            <a class="activity" href="{% url 'backend:activity' activity.id %}">
+                <div class="item">
+                    <div class="itemImage">
+                        <img src="{{ activity.main_img.image.url }}" alt="{{ activity.title }}">
+                    </div>
+                    <div class="itemDetails">
+                        <p class="itemTitle">
+                            {{ activity.title }}
+                        </p>
+                        <div class="statistics">
+                            <p class="date">{{ activity.created_at|date:"Y-m-d" }}</p>
+                            <!-- <div class="horizontalLine">|</div>
+                            <p class="views"> الزيارات: <span></span></p> -->
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+            <p>لا توجد عناصر</p>
+            {% endfor %}
+
+        {% elif productions %}
+
+            {% for production in productions %}
+            <a class="production" href="{% url 'backend:production' production.id %}">
+                <div class="card">
+                    <div class="cardImage">
+                        <img src="{{ production.main_img.image.url }}" alt="{{ production.title }}">
+                    </div>
+                    <div class="cardDetails">
+                        <p class="cardTitle">
+                            {{ production.title }}
+                        </p>
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+            <p>لا توجد عناصر</p>
+            {% endfor %}
+        {% endif %}
+
+    </div>
+
+    <div class="paginationBar"></div>
+</main>
+{% endblock %}

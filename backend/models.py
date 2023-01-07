@@ -44,3 +44,18 @@ class Activity(models.Model):
 
     def __str__(self):
         return self.title
+
+
+
+
+class Production(models.Model):
+    title = models.CharField(max_length=1000, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    main_img = models.ForeignKey(Image, on_delete=models.PROTECT, blank=False)
+    body = models.TextField(max_length=5000, blank=False)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title

@@ -112,6 +112,13 @@
     <h1 class="itemsTitle">اضافة عنصر</h1>
     {% csrf_token %}
     <input class="input" value="{{data.title}}" name="title" type="text" placeholder="العنوان">
+
+    {% if section.book %}
+    <div class="inputGroup">
+        <input class="input" value="{{data.title}}" name="pdf_file" type="text" placeholder="رابط ملف pdf">
+        <input class="input" value="{{data.title}}" name="doc_file" type="text" placeholder="رابط ملف doc">
+    </div>
+    {% endif %}
     
     {% if section.max %}
     <input class="input" value="{{data.audio}}" name="audio" type="text" placeholder="رابط المقطع الصوتي">

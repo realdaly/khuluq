@@ -35,7 +35,7 @@ class File(models.Model):
     title = models.CharField(max_length=1000, blank=True)
 
     def __str__(self):
-        return f"{self.title}"
+        return f"{self.title}({self.file.path})"
 
 
 
@@ -63,6 +63,8 @@ class Production(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     main_img = models.ForeignKey(Image, on_delete=models.PROTECT, blank=False)
     body = models.TextField(max_length=5000, blank=False)
+    pdf_file = models.CharField(max_length=1000, blank=True)
+    doc_file = models.CharField(max_length=1000, blank=True)
 
     class Meta:
         ordering = ['-created_at']

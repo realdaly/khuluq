@@ -49,6 +49,23 @@
             </div>
         </div>
         
+        {% if section.book %}
+        <table class="downloadTable">
+            <tr>
+                <td> تحميل الكتاب </td>
+                <td>
+                    {% if item.pdf_file %}
+                    <a href="{{item.pdf_file}}" class="pdf" download><img src="{% static 'icons/pdf.svg' %}" alt="pdf"></a> 
+                    {% endif %}
+                    
+                    {% if item.doc_file %}
+                    <a href="${json.file_path + json.data.doc_url}" class="word" download><img src="{% static 'icons/word.svg' %}" alt="word document"></a>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+        {% endif %}
+
         <div class="articleContent">
         <div class="articleMedia">
             <div class="articleImage">

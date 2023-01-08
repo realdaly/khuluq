@@ -54,7 +54,7 @@ def activity(request, pk):
 
 def production(request, pk):
     production = Production.objects.get(id=pk)
-    section = {"productions":"productions"}
+    section = {"productions":"productions","book":True}
     context = {"item":production,"section":section}
 
     # hitcount logic

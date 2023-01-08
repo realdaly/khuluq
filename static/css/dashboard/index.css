@@ -178,6 +178,13 @@ html {
     max-width: 90%;
 }
 
+.inputGroup {
+    display: flex;
+    width: 49%;
+    justify-content: center;
+    gap: 1rem;
+}
+
 .input {
     min-width: 90%;
     max-width: 90%;

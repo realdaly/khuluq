@@ -66,13 +66,16 @@ def createActivity(request):
 def createProduction(request):
     all_images = Image.objects.all()
     message = ""
+    section = {"book":True}
 
     if request.method == "POST":
         title = request.POST["title"]
         main_img = Image.objects.get(id=request.POST["main_img"])
         body = request.POST["body"]
+        pdf_file = request.POST["pdf_file"]
+        doc_file = request.POST["doc_file"]
 
-        data = {"title":title,"main_img":main_img,"body":body}
+        data = {"title":title,"main_img":main_img,"body":body,"pdf_file":pdf_file,"doc_file":doc_file}
 
         form = ProductionForm(data)
 
@@ -82,7 +85,7 @@ def createProduction(request):
         else:
             message = "الرجاء ملئ جميع الحقول المطلوبة"
 
-    context = {"message":message,"all_images":all_images}
+    context = {"section":section,"message":message,"all_images":all_images}
     return render(request, "dashboard/forms/create_form.html", context)
 
 

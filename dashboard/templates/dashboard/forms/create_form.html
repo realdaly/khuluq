@@ -107,8 +107,9 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-</style>
+    </style>
 <form method="POST" class="items">
+    <h1 class="itemsTitle">اضافة عنصر</h1>
     {% csrf_token %}
     <input class="input" value="{{data.title}}" name="title" type="text" placeholder="العنوان">
     
@@ -116,9 +117,11 @@
     <input class="input" value="{{data.audio}}" name="audio" type="text" placeholder="رابط المقطع الصوتي">
     {% endif %}
     
-    <textarea name="body" placeholder="التفاصيل" id="editor">{{data.body|safe}}</textarea>
+    <div class="editorContainer">
+        <textarea name="body" placeholder="التفاصيل" id="editor">{{data.body|safe}}</textarea>
+    </div>
     
-    <button onclick="openOverlay(this, 'main_img')" type="button">الصورة الرئيسية</button>
+    <button class="button" class="button" onclick="openOverlay(this, 'main_img')" type="button">الصورة الرئيسية</button>
     <input value="{{data.main_img.id}}" type="text" id="imageId" name="main_img">
     <div class="mainImage">
         {% if data.main_img %}
@@ -130,7 +133,7 @@
 
     
     {% if section.max %}
-    <button onclick="openOverlay(this, 'img_array')" type="button">صور إضافية</button>
+    <button class="button" onclick="openOverlay(this, 'img_array')" type="button">صور إضافية</button>
     <div class="imageArray">
         {% if data.img_array %}
             {% for image in data.img_array %}
@@ -151,7 +154,7 @@
     {% endif %}
     
     {% if section.max %}
-    <button onclick="openOverlay(this, 'vid_array')" type="button">فيديوهات</button>
+    <button class="button" onclick="openOverlay(this, 'vid_array')" type="button">فيديوهات</button>
     <div class="videoArray">
         {% if data.vid_array %}
             {% for video in data.vid_array %}
@@ -173,14 +176,14 @@
     </select>
     {% endif %}
 
-    <input type="submit" value="حفظ وإرسال">
+    <input class="button" type="submit" value="حفظ وإرسال">
 </form>
 
 <!-- Message overlay -->
 {% if message %}
 <div class="overlay overlayOpen">
     <h1>{{message}}</h1>
-    <button class="close" type="button" onclick="closeOverlay(this)">×</button>
+    <button class="button" class="close" type="button" onclick="closeOverlay(this)">×</button>
 </div>
 {% endif %}
 

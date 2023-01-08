@@ -119,15 +119,18 @@ html {
 .itemsContainer {
     background-color: #ddd;
     border-radius: .5rem;
+    max-width: 90%;
+    padding: .5rem 1rem; 
 }
 
 .item {
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
     justify-content: space-between;
-    width: 30rem;
-    padding: .5rem;
+    align-items: center;
+    min-width: 30rem;
     border-bottom: 1px solid #333;
+    font-size: 20px;
 }
 
 .item:last-of-type {
@@ -136,13 +139,16 @@ html {
 
 .buttons {
     display: flex;
-    gap: 1rem;
+    gap: .5rem;
 }
 
 .button {
     text-decoration: none;
     font-weight: bold;
-    color: blue;
+    padding: .5rem 1rem;
+    margin: .5rem 0;
+    color: black;
+    border-radius: .5rem;
 }
 
 .button:hover {
@@ -158,11 +164,23 @@ html {
 }
 
 .buttonDanger {
-    color: tomato;
+    color: white;
+    background-color: tomato;
+}
+
+.buttonEdit {
+    color: white;
+    background-color: #0275d8;
+}
+
+.editorContainer {
+    min-width: 90%;
+    max-width: 90%;
 }
 
 .input {
-    width: 60%;
+    min-width: 90%;
+    max-width: 90%;
     padding: .5rem;
     margin: 1rem 0;
 }

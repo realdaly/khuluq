@@ -15,7 +15,7 @@ class Audio(models.Model):
     title = models.CharField(max_length=1000, blank=True)
 
     def __str__(self):
-        return f"{self.id}- {self.title}"
+        return f"{self.id}- {self.title} ({self.audio.path})"
 
 
 
@@ -23,6 +23,16 @@ class Audio(models.Model):
 class Video(models.Model):
     vid_id = models.CharField(max_length=5000, blank=False)
     title = models.CharField(max_length=1000, blank=False)
+
+    def __str__(self):
+        return f"{self.title}"
+
+
+
+
+class File(models.Model):
+    file = models.FileField(upload_to="files", blank=False)
+    title = models.CharField(max_length=1000, blank=True)
 
     def __str__(self):
         return f"{self.title}"

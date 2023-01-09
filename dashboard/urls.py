@@ -35,5 +35,7 @@ urlpatterns = [
     # Delete
     path("delete-activity/<str:pk>/", views.deleteActivity, name="delete-activity"),
 
-    path("delete-production/<str:pk>/", views.deleteProduction, name="delete-production")
+    path("delete-production/<str:pk>/", views.deleteProduction, name="delete-production"),
+    
+    path("delete-image/<str:pk>/", views.deleteImage, name="delete-image")
 ]

@@ -13,7 +13,9 @@ def index(request):
 
 def activities(request):
     activities = Activity.objects.all()
-    section = {"activities":"activities"}
+    section = {
+        "activities":True
+    }
 
     context = {"items":activities,"section":section}
     return render(request, "dashboard/items.html", context)
@@ -21,15 +23,22 @@ def activities(request):
 
 def productions(request):
     productions = Production.objects.all()
-    section = {"productions":"productions"}
+    section = {
+        "productions":True
+    }
+
     context = {"items":productions,"section":section}
     return render(request, "dashboard/items.html", context)
 
 
 def images(request):
     images = Image.objects.all()
-    context = {"images":images}
-    return render(request, "dashboard/images.html", context)
+    section = {
+        "images":True
+    }
+
+    context = {"items":images,"section":section}
+    return render(request, "dashboard/files.html", context)
 
 
 
@@ -92,43 +101,58 @@ def createProduction(request):
 
 
 def createImage(request):
+    options = {
+        "image":True,
+        "multiple":True
+    }
+
     if request.method == "POST":
         images = request.FILES.getlist("images")
 
         for image in images:
             Image.objects.create(image=image)
 
-    context = {}
-    return render(request, "dashboard/image_form.html", context)
+        return redirect("dashboard:images")
+        
+
+    context = {"options":options}
+    return render(request, "dashboard/forms/upload_form.html", context)
 
 
 
 
 def createVideo(request):
+    options = {
+        "video":True,
+        "multiple":False
+    }
+
     if request.method == "POST":
         vid_id = request.POST["vid_id"]
         title = request.POST["title"]
 
         Video.objects.create(vid_id=vid_id,title=title)
 
-    context = {}
-    return render(request, "dashboard/video_form.html", context)
+    context = {"options":options}
+    return render(request, "dashboard/forms/upload_form.html", context)
 
 
 
 
 def createAudio(request):
+    options = {
+        "audio":True,
+        "multiple":False
+    }
+
     if request.method == "POST":
         audio = request.FILES["audio"]
         title = request.POST["title"]
 
-        instance = Audio.objects.create(audio=audio,title=title)
-        instance.save()
-        updatedContext = {"audio":instance.audio.url,"title":instance.title}
-        return render(request, "dashboard/audio_form.html", updatedContext)
+        Audio.objects.create(audio=audio,title=title)
 
-    context = {}
-    return render(request, "dashboard/audio_form.html", context)
+    context = {"options":options}
+    return render(request, "dashboard/forms/upload_form.html", context)
 
 
 
@@ -198,7 +222,7 @@ def deleteActivity(request, pk):
         return redirect("dashboard:activities")
 
     context = {"item":activity}
-    return render(request, "dashboard/delete.html", context)
+    return render(request, "dashboard/forms/delete_form.html", context)
 
 
 def deleteProduction(request, pk):
@@ -209,4 +233,9 @@ def deleteProduction(request, pk):
         return redirect("dashboard:productions")
 
     context = {"item":production}
-    return render(request, "dashboard/delete.html", context)
+    return render(request, "dashboard/forms/delete_form.html", context)
+
+def deleteImage(request, pk):
+    image = Image.objects.get(id=pk)
+    image.delete()
+    return redirect("dashboard:images")

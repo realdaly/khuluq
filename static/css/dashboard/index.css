@@ -120,7 +120,6 @@ html {
     background-color: #ddd;
     border-radius: .5rem;
     max-width: 90%;
-    padding: .5rem 1rem; 
 }
 
 .item {
@@ -131,6 +130,8 @@ html {
     min-width: 30rem;
     border-bottom: 1px solid #333;
     font-size: 20px;
+    padding: .5rem 1rem;
+
 }
 
 .item:last-of-type {
@@ -190,4 +191,25 @@ html {
     max-width: 90%;
     padding: .5rem;
     margin: 1rem 0;
+}
+
+.filesContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    padding-top: 6rem;
+    background-color: whitesmoke;
+    min-width: 100vw;
+    margin-bottom: 1rem;
+}
+
+.file {
+    display: flex;
+    flex-direction: column;
+    background-color: #ddd;
+    align-items: center;
+    max-height: fit-content;
+    padding: 1rem;
+    border-radius: .5rem;
 }

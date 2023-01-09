@@ -1,0 +1,52 @@
+{% extends "dashboard/layout.html" %}
+
+
+{% block body %}
+{% include "dashboard/menu.html" %}
+
+<div class="items">
+    {% if section.images %}
+    <h1 class="itemsTitle">الصور</h1>
+    <a href="{% url 'dashboard:create-image' %}"><button>رفع صورة</button></a>
+    {% elif section.productions %}
+    <h1 class="itemsTitle">نتاجات المؤسسة</h1>
+    {% endif %}
+    <div class="filesContainer">
+        {% for item in items %}
+        <div class="file">
+            {% if section.images %}
+            <img width="150" height="150" src="{{item.image.url}}" alt="{{item.id}}">
+            {% endif %}
+            <p>{{ item.id }}</p>
+            <div class="buttons">
+                <a class="button buttonEdit"
+                    {% if section.images %}
+                    href="{% url 'dashboard:update-activity' item.id %}"
+                    {% elif section.productions %}
+                    {% endif %}
+                >
+                    نسخ الرابط
+                </a>
+
+                <a class="button buttonDanger"
+                    {% if section.images %}
+                    href="{% url 'dashboard:delete-image' item.id %}"
+                    {% elif section.productions %}
+                    {% endif %}
+                >
+                    حذف
+                </a>
+            </div>
+        </div>
+        
+        {% empty %}
+        <p>لا توجد عناصر.</p>
+        {% endfor %}
+    </div>
+    {% if section.activities %}
+    <a class="button buttonPrimary" href="{% url 'dashboard:create-activity' %}">إضافة نشاط</a>
+    {% elif section.productions %}
+    <a class="button buttonPrimary" href="{% url 'dashboard:create-production' %}">إضافة نتاج</a>
+    {% endif %}
+</div>
+{% endblock %}

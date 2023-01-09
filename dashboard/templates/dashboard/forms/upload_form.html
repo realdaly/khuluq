@@ -1,0 +1,32 @@
+{% extends "dashboard/layout.html" %}
+
+
+
+{% block body %}
+{% include "dashboard/menu.html" %}
+
+{% if options.image %}
+<h1>تحديد صور</h1>
+{% elif options.video %}
+<h1>تحديد فيديو</h1>
+{% elif options.audio %}
+<h1>تحديد صوت</h1>
+{% endif %}
+<form method="POST"
+    {% if options.multiple %}
+    enctype="multipart/form-data"
+    {% endif %}
+>
+    {% csrf_token %}
+    {% if options.image %}
+    <input name="images" type="file" multiple required>
+    {% elif options.video %}
+    <input name="vid_id" type="text" required placeholder="ايدي الفيديو">
+    <input name="title" type="text" required placeholder="عنوان الفيديو">
+    {% elif options.audio %}
+    <input name="audio" type="file" required>
+    <input name="title" type="text" placeholder="عنوان المقطع الصوتي">
+    {% endif %}
+    <input type="submit" value="تم">
+</form>
+{% endblock %}

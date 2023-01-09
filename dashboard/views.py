@@ -41,6 +41,25 @@ def images(request):
     return render(request, "dashboard/files.html", context)
 
 
+def audios(request):
+    audios = Audio.objects.all()
+    section = {
+        "audios":True
+    }
+
+    context = {"items":audios,"section":section}
+    return render(request, "dashboard/files.html", context)
+
+
+def videos(request):
+    videos = Video.objects.all()
+    section = {
+        "videos":True
+    }
+
+    context = {"items":videos,"section":section}
+    return render(request, "dashboard/files.html", context)
+
 
 
 # -------------------------------- Create ----------------------------
@@ -132,6 +151,7 @@ def createVideo(request):
         title = request.POST["title"]
 
         Video.objects.create(vid_id=vid_id,title=title)
+        return redirect("dashboard:videos")
 
     context = {"options":options}
     return render(request, "dashboard/forms/upload_form.html", context)
@@ -146,10 +166,11 @@ def createAudio(request):
     }
 
     if request.method == "POST":
-        audio = request.FILES["audio"]
+        audio = request.POST["audio"]
         title = request.POST["title"]
 
         Audio.objects.create(audio=audio,title=title)
+        return redirect("dashboard:audios")
 
     context = {"options":options}
     return render(request, "dashboard/forms/upload_form.html", context)
@@ -235,7 +256,20 @@ def deleteProduction(request, pk):
     context = {"item":production}
     return render(request, "dashboard/forms/delete_form.html", context)
 
+
 def deleteImage(request, pk):
     image = Image.objects.get(id=pk)
     image.delete()
     return redirect("dashboard:images")
+
+
+def deleteAudio(request, pk):
+    audio = Audio.objects.get(id=pk)
+    audio.delete()
+    return redirect("dashboard:audios")
+
+
+def deleteVideo(request, pk):
+    video = Video.objects.get(id=pk)
+    video.delete()
+    return redirect("dashboard:videos")

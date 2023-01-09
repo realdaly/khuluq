@@ -71,10 +71,15 @@
             <p>المسابقات الأخلاقية</p>
         </div>
         
-        <div class="dashItem">
+        <a href="{% url 'dashboard:videos' %}" class="dashItem">
             <img src="{% static 'icons/videos.svg' %}" alt="مقاطع الفيديو">
             <p>مقاطع الفيديو</p>
-        </div>
+        </a>
+
+        <a href="{% url 'dashboard:audios' %}" class="dashItem">
+            <img src="{% static 'icons/audio.svg' %}" alt="مقاطع الصوت">
+            <p>مقاطع الصوت</p>
+        </a>
 
         <div class="dashItem ">
             <img src="{% static 'icons/file_manager.svg' %}" alt="إدارة الملفات">

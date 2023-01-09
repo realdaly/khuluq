@@ -13,6 +13,10 @@ urlpatterns = [
 
     path("images/", views.images, name="images"),
 
+    path("audios/", views.audios, name="audios"),
+
+    path("videos/", views.videos, name="videos"),
+
 
     # Create
     path("create-activity/", views.createActivity, name="create-activity"),
@@ -37,5 +41,9 @@ urlpatterns = [
 
     path("delete-production/<str:pk>/", views.deleteProduction, name="delete-production"),
     
-    path("delete-image/<str:pk>/", views.deleteImage, name="delete-image")
+    path("delete-image/<str:pk>/", views.deleteImage, name="delete-image"),
+
+    path("delete-audio/<str:pk>/", views.deleteAudio, name="delete-audio"),
+    
+    path("delete-video/<str:pk>/", views.deleteVideo, name="delete-video")
 ]

@@ -7,17 +7,29 @@
 <div class="items">
     {% if section.images %}
     <h1 class="itemsTitle">الصور</h1>
-    <a href="{% url 'dashboard:create-image' %}"><button>رفع صورة</button></a>
-    {% elif section.productions %}
-    <h1 class="itemsTitle">نتاجات المؤسسة</h1>
+    <a href="{% url 'dashboard:create-image' %}"><button>رفع صور</button></a>
+    {% elif section.audios %}
+    <h1 class="itemsTitle">مقاطع الصوت</h1>
+    <a href="{% url 'dashboard:create-audio' %}"><button>رفع مقطع صوتي</button></a>
+    {% elif section.videos %}
+    <h1 class="itemsTitle">مقاطع الفيديو</h1>
+    <a href="{% url 'dashboard:create-video' %}"><button>اضافة فيديو</button></a>
     {% endif %}
     <div class="filesContainer">
         {% for item in items %}
         <div class="file">
             {% if section.images %}
-            <img width="150" height="150" src="{{item.image.url}}" alt="{{item.id}}">
+            <img width="150" height="120" src="{{item.image.url}}" alt="{{item.id}}">
+            {% elif section.audios %}
+            <audio src="{{item.audio.path}}" controls></audio>
+            {% elif section.videos %}
+            <img width="200" height="130" src="https://img.youtube.com/vi/{{ item.vid_id }}/0.jpg" alt="{{item.id}}">
             {% endif %}
+            {% if item.title %}
+            <p class="fileTitle">{{ item.title }}</p>
+            {% else %}
             <p>{{ item.id }}</p>
+            {% endif %}
             <div class="buttons">
                 <a class="button buttonEdit"
                     {% if section.images %}
@@ -31,7 +43,10 @@
                 <a class="button buttonDanger"
                     {% if section.images %}
                     href="{% url 'dashboard:delete-image' item.id %}"
-                    {% elif section.productions %}
+                    {% elif section.audios %}
+                    href="{% url 'dashboard:delete-audio' item.id %}"
+                    {% elif section.videos %}
+                    href="{% url 'dashboard:delete-video' item.id %}"
                     {% endif %}
                 >
                     حذف

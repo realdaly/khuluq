@@ -5,28 +5,32 @@
 {% block body %}
 {% include "dashboard/menu.html" %}
 
-{% if options.image %}
-<h1>تحديد صور</h1>
-{% elif options.video %}
-<h1>تحديد فيديو</h1>
-{% elif options.audio %}
-<h1>تحديد صوت</h1>
-{% endif %}
-<form method="POST"
-    {% if options.multiple %}
-    enctype="multipart/form-data"
-    {% endif %}
->
-    {% csrf_token %}
+<div class="items">
     {% if options.image %}
-    <input name="images" type="file" multiple required>
+    <h1 class="itemsTitle">اضافة صور</h1>
     {% elif options.video %}
-    <input name="vid_id" type="text" required placeholder="ايدي الفيديو">
-    <input name="title" type="text" required placeholder="عنوان الفيديو">
+    <h1 class="itemsTitle">اضافة فيديو</h1>
     {% elif options.audio %}
-    <input name="audio" type="file" required>
-    <input name="title" type="text" placeholder="عنوان المقطع الصوتي">
+    <h1 class="itemsTitle">اضافة صوت</h1>
     {% endif %}
-    <input type="submit" value="تم">
-</form>
+    <div class="itemsContainer">
+        <form class="form" method="POST"
+            {% if options.multiple %}
+            enctype="multipart/form-data"
+            {% endif %}
+        >
+            {% csrf_token %}
+            {% if options.image %}
+            <input class="input" name="images" type="file" multiple required>
+            {% elif options.video %}
+            <input class="input" name="vid_id" type="text" required placeholder="ايدي الفيديو">
+            <input class="input" name="title" type="text" required placeholder="عنوان الفيديو">
+            {% elif options.audio %}
+            <input class="input" name="audio" type="file" required>
+            <input class="input" name="title" type="text" placeholder="عنوان المقطع الصوتي">
+            {% endif %}
+            <input type="submit" value="تم">
+        </form>
+    </div>
+</div>
 {% endblock %}

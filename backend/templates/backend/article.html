@@ -59,7 +59,7 @@
                     {% endif %}
                     
                     {% if item.doc_file %}
-                    <a href="${json.file_path + json.data.doc_url}" class="word" download><img src="{% static 'icons/word.svg' %}" alt="word document"></a>
+                    <a href="{{item.doc_file}}" class="word" download><img src="{% static 'icons/word.svg' %}" alt="word document"></a>
                     {% endif %}
                 </td>
             </tr>

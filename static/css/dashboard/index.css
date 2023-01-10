@@ -188,7 +188,6 @@ html {
 
 .input {
     min-width: 90%;
-    max-width: 90%;
     padding: .5rem;
     margin: 1rem 0;
 }
@@ -219,4 +218,14 @@ html {
     max-width: 200px;
     overflow: hidden;
     white-space: wrap;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    padding: 2rem;
+    width: 30rem;
+    gap: 3rem;
 }

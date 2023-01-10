@@ -7,13 +7,13 @@
 <div class="items">
     {% if section.images %}
     <h1 class="itemsTitle">الصور</h1>
-    <a href="{% url 'dashboard:create-image' %}"><button>رفع صور</button></a>
+    <a class="button" href="{% url 'dashboard:create-image' %}"><button>رفع صور</button></a>
     {% elif section.audios %}
     <h1 class="itemsTitle">مقاطع الصوت</h1>
-    <a href="{% url 'dashboard:create-audio' %}"><button>رفع مقطع صوتي</button></a>
+    <a class="button" href="{% url 'dashboard:create-audio' %}"><button>رفع مقطع صوتي</button></a>
     {% elif section.videos %}
     <h1 class="itemsTitle">مقاطع الفيديو</h1>
-    <a href="{% url 'dashboard:create-video' %}"><button>اضافة فيديو</button></a>
+    <a class="button" href="{% url 'dashboard:create-video' %}"><button>اضافة فيديو</button></a>
     {% endif %}
     <div class="filesContainer">
         {% for item in items %}

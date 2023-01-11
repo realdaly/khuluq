@@ -6,93 +6,102 @@
 {% endblock %}
 
 {% block body %}
+<nav>
+    <div class="navbar">
+      <div class="container nav-container">
+          <div class="logo">
+              <h1>مؤسسة الخلق العظيم</h1>
+            </div>
+        <input class="checkbox" type="checkbox" {{visible}}>
+          <div class="hamburger-lines">
+            <span class="line line1"></span>
+            <span class="line line2"></span>
+            <span class="line line3"></span>
+          </div>  
+        <div class="menu-items">
+          
+            <div class="dashMenu container">
+        
+                <a class="dashItem">
+                    <img src="{% static 'icons/slider.svg' %}" alt="السلايدر">
+                    <p>السلايدر</p>
+                </a>
+        
+                <a href="{% url 'dashboard:productions' %}" class="dashItem">
+                    <img src="{% static 'icons/product.svg' %}" alt="نتاجات المؤسسة">
+                    <p>نتاجات المؤسسة</p>
+                </a>
+                
+                <a href="{% url 'dashboard:activities' %}" class="dashItem">
+                    <img src="{% static 'icons/activity.svg' %}" alt="نشاطات المؤسسة">
+                    <p>نشاطات المؤسسة</p>
+                </a href="{% url 'dashboard:activities' %}">
+                
+                <a class="dashItem">
+                    <img src="{% static 'icons/eLibrary.svg' %}" alt="المكتبة الرقمية">
+                    <p>المكتبة الرقمية</p>
+                </a>
+            
+                <a class="dashItem">
+                    <img src="{% static 'icons/about.svg' %}" alt="عن المؤسسة">
+                    <p>عن المؤسسة</p>
+                </a>
+                
+                <a class="dashItem">
+                    <img src="{% static 'icons/conferences.svg' %}" alt="المؤتمرات">
+                    <p>المؤتمرات</p>
+                </a>
+                
+                <a class="dashItem">
+                    <img src="{% static 'icons/pLibrary.svg' %}" alt="المكتبة الورقية">
+                    <p>المكتبة الورقية</p>
+                </a>
+            
+                <a class="dashItem">
+                    <img src="{% static 'icons/stories.svg' %}" alt="قصص وحكم أخلاقية">
+                    <p>قصص وحكم أخلاقية</p>
+                </a>
+                
+                <a class="dashItem">
+                    <img src="{% static 'icons/window.svg' %}" alt="نافذة الخلق العظيم">
+                    <p>نافذة الخلق العظيم</p>
+                </a>
+                
+                <a class="dashItem">
+                    <img src="{% static 'icons/seminars.svg' %}" alt="الندوات">
+                    <p>الندوات</p>
+                </a>
+            
+                <a href="{% url 'dashboard:images' %}" class="dashItem">
+                    <img src="{% static 'icons/gallery.svg' %}" alt="معرض الصور">
+                    <p>معرض الصور</p>
+                </a>
+                
+                <a class="dashItem">
+                    <img src="{% static 'icons/contest.svg' %}" alt="المسابقات الأخلاقية">
+                    <p>المسابقات الأخلاقية</p>
+                </a>
+                
+                <a href="{% url 'dashboard:videos' %}" class="dashItem">
+                    <img src="{% static 'icons/videos.svg' %}" alt="مقاطع الفيديو">
+                    <p>مقاطع الفيديو</p>
+                </a>
+        
+                <a href="{% url 'dashboard:audios' %}" class="dashItem">
+                    <img src="{% static 'icons/audio.svg' %}" alt="مقاطع الصوت">
+                    <p>مقاطع الصوت</p>
+                </a>
+        
+                <a class="dashItem">
+                    <img src="{% static 'icons/file_manager.svg' %}" alt="إدارة الملفات">
+                    <p>إدارة الملفات</p>
+                </a>
+            
+            </div>
 
-<div class="dashMenuContainer">
-
-    <div class="dashMenu container">
-        
-        <div class="dashItem">
-            <img src="{% static 'icons/slider.svg' %}" alt="السلايدر">
-            <p>السلايدر</p>
         </div>
-
-        <a href="{% url 'dashboard:productions' %}" class="dashItem">
-            <img src="{% static 'icons/product.svg' %}" alt="نتاجات المؤسسة">
-            <p>نتاجات المؤسسة</p>
-        </a>
-        
-        <a href="{% url 'dashboard:activities' %}" class="dashItem">
-            <img src="{% static 'icons/activity.svg' %}" alt="نشاطات المؤسسة">
-            <p>نشاطات المؤسسة</p>
-        </a href="{% url 'dashboard:activities' %}">
-        
-        <div class="dashItem">
-            <img src="{% static 'icons/eLibrary.svg' %}" alt="المكتبة الرقمية">
-            <p>المكتبة الرقمية</p>
-        </div>
-    
-        <div class="dashItem">
-            <img src="{% static 'icons/about.svg' %}" alt="عن المؤسسة">
-            <p>عن المؤسسة</p>
-        </div>
-        
-        <div class="dashItem">
-            <img src="{% static 'icons/conferences.svg' %}" alt="المؤتمرات">
-            <p>المؤتمرات</p>
-        </div>
-        
-        <div class="dashItem">
-            <img src="{% static 'icons/pLibrary.svg' %}" alt="المكتبة الورقية">
-            <p>المكتبة الورقية</p>
-        </div>
-    
-        <div class="dashItem">
-            <img src="{% static 'icons/stories.svg' %}" alt="قصص وحكم أخلاقية">
-            <p>قصص وحكم أخلاقية</p>
-        </div>
-        
-        <div class="dashItem">
-            <img src="{% static 'icons/window.svg' %}" alt="نافذة الخلق العظيم">
-            <p>نافذة الخلق العظيم</p>
-        </div>
-        
-        <div class="dashItem">
-            <img src="{% static 'icons/seminars.svg' %}" alt="الندوات">
-            <p>الندوات</p>
-        </div>
-    
-        <a href="{% url 'dashboard:images' %}" class="dashItem">
-            <img src="{% static 'icons/gallery.svg' %}" alt="معرض الصور">
-            <p>معرض الصور</p>
-        </a>
-        
-        <div class="dashItem">
-            <img src="{% static 'icons/contest.svg' %}" alt="المسابقات الأخلاقية">
-            <p>المسابقات الأخلاقية</p>
-        </div>
-        
-        <a href="{% url 'dashboard:videos' %}" class="dashItem">
-            <img src="{% static 'icons/videos.svg' %}" alt="مقاطع الفيديو">
-            <p>مقاطع الفيديو</p>
-        </a>
-
-        <a href="{% url 'dashboard:audios' %}" class="dashItem">
-            <img src="{% static 'icons/audio.svg' %}" alt="مقاطع الصوت">
-            <p>مقاطع الصوت</p>
-        </a>
-
-        <div class="dashItem ">
-            <img src="{% static 'icons/file_manager.svg' %}" alt="إدارة الملفات">
-            <p>إدارة الملفات</p>
-        </div>
-
-        <div class="icon">
-            <img src="{% static 'icons/down-arrow.svg' %}" alt="">
-        </div>
-    
+      </div>
     </div>
-
-</div>
-
+  </nav>
 
 {% endblock %}

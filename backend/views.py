@@ -8,8 +8,8 @@ from .models import *
 
 # Create your views here
 def home(request):
-    activities = Activity.objects.all()[:5]
-    productions =  Production.objects.all()
+    activities = Activity.objects.all().exclude(active=False)[:5]
+    productions =  Production.objects.all().exclude(active=False)
 
     context = {"activities":activities,"productions":productions}
     return render(request, "backend/home.html", context)

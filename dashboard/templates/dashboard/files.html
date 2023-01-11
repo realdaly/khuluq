@@ -7,13 +7,13 @@
 <div class="items">
     {% if section.images %}
     <h1 class="itemsTitle">الصور</h1>
-    <a class="button" href="{% url 'dashboard:create-image' %}"><button>رفع صور</button></a>
+    <a class="button buttonPrimary" href="{% url 'dashboard:create-image' %}">رفع صور</a>
     {% elif section.audios %}
     <h1 class="itemsTitle">مقاطع الصوت</h1>
-    <a class="button" href="{% url 'dashboard:create-audio' %}"><button>رفع مقطع صوتي</button></a>
+    <a class="button buttonPrimary" href="{% url 'dashboard:create-audio' %}">رفع مقطع صوتي</a>
     {% elif section.videos %}
     <h1 class="itemsTitle">مقاطع الفيديو</h1>
-    <a class="button" href="{% url 'dashboard:create-video' %}"><button>اضافة فيديو</button></a>
+    <a class="button buttonPrimary" href="{% url 'dashboard:create-video' %}">اضافة فيديو</a>
     {% endif %}
     <div class="filesContainer">
         {% for item in items %}
@@ -31,26 +31,22 @@
             <p>{{ item.id }}</p>
             {% endif %}
             <div class="buttons">
-                <a class="button buttonEdit"
-                    {% if section.images %}
-                    href="{% url 'dashboard:update-activity' item.id %}"
-                    {% elif section.productions %}
-                    {% endif %}
-                >
+                <a class="button buttonEdit">
                     نسخ الرابط
                 </a>
 
-                <a class="button buttonDanger"
+                <form
                     {% if section.images %}
-                    href="{% url 'dashboard:delete-image' item.id %}"
+                    action="{% url 'dashboard:delete-image' item.id %}"
                     {% elif section.audios %}
-                    href="{% url 'dashboard:delete-audio' item.id %}"
+                    action="{% url 'dashboard:delete-audio' item.id %}"
                     {% elif section.videos %}
-                    href="{% url 'dashboard:delete-video' item.id %}"
+                    action="{% url 'dashboard:delete-video' item.id %}"
                     {% endif %}
-                >
-                    حذف
-                </a>
+                    method="POST">
+                    <p onclick="this.parentElement.submit()" class="button buttonDanger">حذف</p>
+                    {% csrf_token %}
+                </form>
             </div>
         </div>
         

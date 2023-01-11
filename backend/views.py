@@ -17,14 +17,14 @@ def home(request):
 
 # Section views
 def activities(request):
-    activities = Activity.objects.all()
+    activities = Activity.objects.all().exclude(active=False)
 
     context = {"activities":activities}
     return render(request, "backend/section.html", context)
 
 
 def productions(request):
-    productions =  Production.objects.all()
+    productions =  Production.objects.all().exclude(active=False)
 
     context = {"productions":productions}
     return render(request, "backend/section.html", context)

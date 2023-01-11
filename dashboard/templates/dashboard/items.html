@@ -18,9 +18,25 @@
                 <p>{{ item.title }}</p>
                 <div class="buttons">
                     {% if section.activities %}
+                    <form action="{% url 'dashboard:activate-activity' item.id %}" method="POST">
+                        {% csrf_token %}
+                        <input onchange="this.form.submit()" class="checkbox" type="checkbox" 
+                        {% if item.active == True %}
+                        checked
+                        {% endif %}
+                        >
+                    </form>
                     <a class="button buttonEdit" href="{% url 'dashboard:update-activity' item.id %}">تعديل</a>
                     <a class="button buttonDanger" href="{% url 'dashboard:delete-activity' item.id %}">حذف</a>
                     {% elif section.productions %}
+                    <form action="{% url 'dashboard:activate-production' item.id %}" method="POST">
+                        {% csrf_token %}
+                        <input onchange="this.form.submit()" class="checkbox" type="checkbox" 
+                        {% if item.active == True %}
+                        checked
+                        {% endif %}
+                        >
+                    </form>
                     <a class="button buttonEdit" href="{% url 'dashboard:update-production' item.id %}">تعديل</a>
                     <a class="button buttonDanger" href="{% url 'dashboard:delete-production' item.id %}">حذف</a>
                     {% endif %}

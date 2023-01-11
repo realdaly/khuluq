@@ -48,6 +48,7 @@ class Activity(models.Model):
     img_array = models.ManyToManyField(Image, blank=True, related_name="images")
     vid_array = models.ManyToManyField(Video, blank=True, related_name="videos")
     audio = models.CharField(max_length=1000, blank=True)
+    active = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-created_at']
@@ -65,6 +66,7 @@ class Production(models.Model):
     body = models.TextField(max_length=5000, blank=False)
     pdf_file = models.CharField(max_length=1000, blank=True)
     doc_file = models.CharField(max_length=1000, blank=True)
+    active = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-created_at']

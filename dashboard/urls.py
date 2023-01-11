@@ -32,8 +32,10 @@ urlpatterns = [
 
     # Update
     path("update-activity/<str:pk>/", views.updateActivity, name="update-activity"),
+    path("activate-activity/<str:pk>/ ", views.activateActivity, name="activate-activity"),
 
     path("update-production/<str:pk>/", views.updateProduction, name="update-production"),
+    path("activate-production/<str:pk>/ ", views.activateProduction, name="activate-production"),
     
     
     # Delete

@@ -258,18 +258,46 @@ def deleteProduction(request, pk):
 
 
 def deleteImage(request, pk):
-    image = Image.objects.get(id=pk)
-    image.delete()
-    return redirect("dashboard:images")
+    if request.method == "POST":
+        image = Image.objects.get(id=pk)
+        image.delete()
+        return redirect("dashboard:images")
 
 
 def deleteAudio(request, pk):
-    audio = Audio.objects.get(id=pk)
-    audio.delete()
-    return redirect("dashboard:audios")
+    if request.method == "POST":
+        audio = Audio.objects.get(id=pk)
+        audio.delete()
+        return redirect("dashboard:audios")
 
 
 def deleteVideo(request, pk):
-    video = Video.objects.get(id=pk)
-    video.delete()
-    return redirect("dashboard:videos")
+    if request.method == "POST":
+        video = Video.objects.get(id=pk)
+        video.delete()
+        return redirect("dashboard:videos")
+
+
+
+
+# -------------------------------- Activate ----------------------------
+def activateActivity(request, pk):
+    if request.method == "POST":
+        item = Activity.objects.get(id=pk)
+        if item.active == False:
+            item.active = True
+        elif item.active == True:
+            item.active = False
+        item.save()
+        return redirect("dashboard:activities")
+
+
+def activateProduction(request, pk):
+    if request.method == "POST":
+        item = Production.objects.get(id=pk)
+        if item.active == False:
+            item.active = True
+        elif item.active == True:
+            item.active = False
+        item.save()
+        return redirect("dashboard:productions")

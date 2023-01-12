@@ -16,6 +16,7 @@
             {% for item in items %}
             <div class="item">
                 <p>{{ item.title }}</p>
+                <img width="150" height="100" src="{{ item.main_img.image.url }}" alt="">
                 <div class="buttons">
                     {% if section.activities %}
                     <form action="{% url 'dashboard:activate-activity' item.id %}" method="POST">

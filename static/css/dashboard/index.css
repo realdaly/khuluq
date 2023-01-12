@@ -231,7 +231,8 @@ html {
 }
 
 .item {
-    display: flex;
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr;
     gap: 1.5rem;
     justify-content: space-between;
     align-items: center;
@@ -343,4 +344,5 @@ html {
 .checkbox {
     width: 1.5rem;
     height: 1.5rem;
+    cursor: pointer;
 }

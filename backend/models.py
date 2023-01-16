@@ -47,7 +47,7 @@ class Activity(models.Model):
     body = models.TextField(max_length=5000, blank=False)
     img_array = models.ManyToManyField(Image, blank=True, related_name="images")
     vid_array = models.ManyToManyField(Video, blank=True, related_name="videos")
-    audio = models.CharField(max_length=1000, blank=True)
+    audio = models.ForeignKey(Audio, on_delete=models.PROTECT, blank=False)
     active = models.BooleanField(default=False)
 
     class Meta:

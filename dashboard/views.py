@@ -1,7 +1,14 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
+import os
 
 from backend.models import *
 from .forms import *
+
+class CustomManager(models.Manager):
+    def delete(self):
+        for obj in self.get_queryset():
+            obj.delete()
 
 # -------------------------------- Read ----------------------------
 def index(request):
@@ -32,26 +39,55 @@ def productions(request):
 
 
 def images(request):
+    media_path = request.build_absolute_uri('/media/')
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+
+    if is_ajax:
+        if request.method == 'GET':
+            images = list(Image.objects.all().values())
+            
+            return JsonResponse({'context': images})
+        return JsonResponse({'status': 'Invalid request'}, status=400)
+
     images = Image.objects.all()
     section = {
         "images":True
     }
 
-    context = {"items":images,"section":section}
+    context = {"items":images,"section":section,"media_path":media_path}
     return render(request, "dashboard/files.html", context)
 
 
 def audios(request):
+    media_path = request.build_absolute_uri('/media/')
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+
+    if is_ajax:
+        if request.method == 'GET':
+            audios = list(Audio.objects.all().values())
+            
+            return JsonResponse({'context': audios})
+        return JsonResponse({'status': 'Invalid request'}, status=400)
+
     audios = Audio.objects.all()
     section = {
         "audios":True
     }
 
-    context = {"items":audios,"section":section}
+    context = {"items":audios,"section":section,"media_path":media_path}
     return render(request, "dashboard/files.html", context)
 
 
 def videos(request):
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+
+    if is_ajax:
+        if request.method == 'GET':
+            videos = list(Video.objects.all().values())
+            
+            return JsonResponse({'context': videos})
+        return JsonResponse({'status': 'Invalid request'}, status=400)
+
     videos = Video.objects.all()
     section = {
         "videos":True
@@ -64,8 +100,7 @@ def videos(request):
 
 # -------------------------------- Create ----------------------------
 def createActivity(request):
-    all_images = Image.objects.all()
-    all_videos = Video.objects.all()
+    media_path = request.build_absolute_uri('/media/')
     message = ""
     section = {"max":True}
 
@@ -87,12 +122,12 @@ def createActivity(request):
         else:
             message = "الرجاء ملئ جميع الحقول المطلوبة"
 
-    context = {"section":section,"message":message,"all_images":all_images, "all_videos":all_videos}
+    context = {"section":section,"message":message,"media_path":media_path}
     return render(request, "dashboard/forms/create_form.html", context)
 
 
 def createProduction(request):
-    all_images = Image.objects.all()
+    media_path = request.build_absolute_uri('/media/')
     message = ""
     section = {"book":True}
 
@@ -113,7 +148,7 @@ def createProduction(request):
         else:
             message = "الرجاء ملئ جميع الحقول المطلوبة"
 
-    context = {"section":section,"message":message,"all_images":all_images}
+    context = {"section":section,"message":message,"media_path":media_path}
     return render(request, "dashboard/forms/create_form.html", context)
 
 
@@ -162,11 +197,11 @@ def createVideo(request):
 def createAudio(request):
     options = {
         "audio":True,
-        "multiple":False
+        "multiple":True
     }
 
     if request.method == "POST":
-        audio = request.POST["audio"]
+        audio = request.FILES["audio"]
         title = request.POST["title"]
 
         Audio.objects.create(audio=audio,title=title)
@@ -180,6 +215,7 @@ def createAudio(request):
 
 # -------------------------------- Update ----------------------------
 def updateActivity(request, pk):
+    media_path = request.build_absolute_uri('/media/')
     section = {"max":True}
     all_images = Image.objects.all()
     all_videos = Video.objects.all()
@@ -204,7 +240,7 @@ def updateActivity(request, pk):
         else:
             message = "Form is not valid"
 
-    context = {"section":section,"message":message,"all_images":all_images,"all_videos":all_videos,"data":data}
+    context = {"section":section,"message":message,"all_images":all_images,"all_videos":all_videos,"data":data,"media_path":media_path}
     return render(request, "dashboard/forms/create_form.html", context)
 
 
@@ -260,6 +296,8 @@ def deleteProduction(request, pk):
 def deleteImage(request, pk):
     if request.method == "POST":
         image = Image.objects.get(id=pk)
+        if len(image.image) > 0:
+            os.remove(image.image.path)
         image.delete()
         return redirect("dashboard:images")
 
@@ -267,6 +305,8 @@ def deleteImage(request, pk):
 def deleteAudio(request, pk):
     if request.method == "POST":
         audio = Audio.objects.get(id=pk)
+        if len(audio.audio) > 0:
+            os.remove(audio.audio.path)
         audio.delete()
         return redirect("dashboard:audios")
 

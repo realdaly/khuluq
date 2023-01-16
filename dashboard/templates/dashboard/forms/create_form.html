@@ -22,13 +22,12 @@
     form {
         display: flex;
         flex-direction: column;
-        width: 50rem;
     }
 
     .overlay {
         position: absolute;
         top: 0;
-        z-index: 3;
+        z-index: 10;
         display: none;
         flex-direction: column;
         justify-content: start;
@@ -45,8 +44,10 @@
         display: flex;
     }
 
-    .overlay .images {
+    .overlay .images, .audios {
         display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
         gap: 1rem;
     }
 
@@ -81,7 +82,7 @@
         border: 2px solid tomato;
     }
     
-    #imageId, #imagesId, #videosId {
+    #imageId, #imagesId, #videosId, #audioId {
         display: none;
     }
 
@@ -92,6 +93,8 @@
     
     .videos {
         display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
         column-gap: .5rem;
     }
 
@@ -107,11 +110,23 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    </style>
+
+    .audio {
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 20rem;
+        background-color: rgb(255, 255, 255,.7);
+        border-radius: 1rem;
+        color: black;
+        cursor: pointer;
+        box-shadow: 0 0 5px #000;
+    }
+</style>
 <form method="POST" class="items">
     <h1 class="itemsTitle">اضافة عنصر</h1>
     {% csrf_token %}
-    <input class="input" value="{{data.title}}" name="title" type="text" placeholder="العنوان">
+    <input class="input" value="{{data.title}}" name="title" type="text" placeholder="العنوان" required>
 
     {% if section.book %}
     <div class="inputGroup">
@@ -120,15 +135,11 @@
     </div>
     {% endif %}
     
-    {% if section.max %}
-    <input class="input" value="{{data.audio}}" name="audio" type="text" placeholder="رابط المقطع الصوتي">
-    {% endif %}
-    
     <div class="editorContainer">
-        <textarea name="body" placeholder="التفاصيل" id="editor">{{data.body|safe}}</textarea>
+        <textarea name="body" placeholder="التفاصيل" id="editor" required>{{data.body|safe}}</textarea>
     </div>
     
-    <button class="button" class="button" onclick="openOverlay(this, 'main_img')" type="button">الصورة الرئيسية</button>
+    <button class="button" onclick="openOverlay(this, 'main_img');fetchImages()" type="button">الصورة الرئيسية</button>
     <input value="{{data.main_img.id}}" type="text" id="imageId" name="main_img">
     <div class="mainImage">
         {% if data.main_img %}
@@ -140,7 +151,7 @@
 
     
     {% if section.max %}
-    <button class="button" onclick="openOverlay(this, 'img_array')" type="button">صور إضافية</button>
+    <button class="button" onclick="openOverlay(this, 'img_array');fetchImages()" type="button">صور إضافية</button>
     <div class="imageArray">
         {% if data.img_array %}
             {% for image in data.img_array %}
@@ -161,7 +172,7 @@
     {% endif %}
     
     {% if section.max %}
-    <button class="button" onclick="openOverlay(this, 'vid_array')" type="button">فيديوهات</button>
+    <button class="button" onclick="openOverlay(this, 'vid_array');fetchVideos()" type="button">مقاطع فيديو</button>
     <div class="videoArray">
         {% if data.vid_array %}
             {% for video in data.vid_array %}
@@ -183,6 +194,17 @@
     </select>
     {% endif %}
 
+    {% if section.max %}
+    <button class="button" onclick="openOverlay(this, 'audio');fetchAudios()" type="button">مقطع صوت</button>
+    <input value="{{data.audio.id}}" type="text" id="audioId" name="audio">
+    <div class="audio">
+        {% if data.audio %}
+        <audio src="{{data.audio.audio.url}}" controls></audio>
+        <div class="title">{{data.audio.title}}</div>
+        {% endif %}
+    </div>
+    {% endif %}
+
     <input class="button" type="submit" value="إرسال">
 </form>
 
@@ -199,43 +221,30 @@
     <h1>تحديد صورة</h1>
     <a onclick="closeOverlay(this)" href="{% url 'dashboard:create-image' %}" target="_blank"><button type="button">رفع صور</button></a>
     <div class="images">
-        {% for image in all_images %}
-        <div class="image">
-            <img onclick="saveTargetInfo(this)" data-value="{{ image.id }}" src="{{ image.image.url }}" alt="image">
-        </div>
-        {% endfor %}
     </div>
     <button type="button" onclick="pickSelectedTarget(this)">حفظ</button>
     <button class="close" type="button" onclick="closeOverlay(this)">×</button>
 </div>
 
-<!-- All Videos overlay -->
+<!-- All videos overlay -->
 <div class="allVideos overlay">
     <h1>تحديد فيديو</h1>
     <a onclick="closeOverlay(this)" href="{% url 'dashboard:create-video' %}" target="_blank"><button type="button">إضافة فيديو</button></a>
     <div class="videos">
-        {% for video in all_videos %}
-        <div onclick="saveTargetInfo(this)" class="video" data-value="{{ video.id }}">
-            <div class="image">
-                <img src="https://img.youtube.com/vi/{{ video.vid_id }}/0.jpg" alt="Video Thumbnail">
-            </div>
-            <div class="title">{{video.title}}</div>
-        </div>
-        {% endfor %}
     </div>
     <button type="button" onclick="pickSelectedTarget(this)">حفظ</button>
     <button class="close" type="button" onclick="closeOverlay(this)">×</button>
 </div>
 
-<!-- Image uploading form -->
-<!-- <div class="uploadImagesForm overlay">
-    <h1>رفع صور</h1>
-    <form method="POST">
-        {% csrf_token %}
-        <input name="images" type="file" multiple required>
-        <input type="submit" name="submitImages" value="رفع">
-    </form>
-</div> -->
+<!-- All audios overlay -->
+<div class="allAudios overlay">
+    <h1>تحديد صوت</h1>
+    <a onclick="closeOverlay(this)" href="{% url 'dashboard:create-audio' %}" target="_blank"><button type="button">إضافة صوت</button></a>
+    <div class="audios">
+    </div>
+    <button type="button" onclick="pickSelectedTarget(this)">حفظ</button>
+    <button class="close" type="button" onclick="closeOverlay(this)">×</button>
+</div>
 
 <script src="{% static 'js/jodit.min.js' %}"></script>
 <script>
@@ -248,6 +257,8 @@
     function openOverlay(button, field){
         if(field == "vid_array"){
             document.querySelector(".allVideos").style.display = "flex"
+        } else if(field == "audio"){
+            document.querySelector(".allAudios").style.display = "flex"
         } else {
             document.querySelector(".allImages").style.display = "flex"
         }
@@ -292,6 +303,16 @@
             localStorage.setItem("videos_id", JSON.stringify(ids))
             localStorage.setItem("videos_src", JSON.stringify(srcs))
             localStorage.setItem("videos_title", JSON.stringify(titles))
+        } else if(field == "audio"){
+            document.querySelectorAll(".allAudios .audio").forEach(one => one.classList.remove("selected"))
+
+            let audioSrc = target.querySelector("audio").src
+            let audioTitle = target.querySelector(".title").innerHTML
+            let id = target.dataset.value
+
+            localStorage.setItem("audio_id", id)
+            localStorage.setItem("audio_src", audioSrc)
+            localStorage.setItem("audio_title", JSON.stringify(audioTitle))
         }
 
         // Adding select effect
@@ -349,15 +370,94 @@
                     </div>
                     <div>${videos_title[i]}</div>
                 </div>`
-            }
+            } 
 
             videosId.innerHTML = ""
             videos_id.map(item => {
                 videosId.innerHTML += `<option value="${item}" selected></option>`
             })
+        } else if(field == "audio"){
+            let src = localStorage.getItem("audio_src")
+            let id = localStorage.getItem("audio_id")
+            let title = localStorage.getItem("audio_title")
+
+            document.querySelector(".audio").innerHTML = "" 
+            document.querySelector(".audio").innerHTML = 
+            `<audio src="${src}" controls></audio>
+            <div class="title">${title}</div>`
+            document.getElementById("audioId").value = id
         }
 
         closeOverlay(target)
     }
+
+    function fetchImages(){
+        let url = "{% url 'dashboard:images' %}"
+
+        fetch(url, {
+        method: "GET",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+        }
+        })
+        .then(response => response.json())
+        .then(json => {
+            document.querySelector(".images").innerHTML = ""
+            json.context.map(item => {
+                document.querySelector(".images").innerHTML += 
+                `<div class="image">
+                    <img onclick="saveTargetInfo(this)" data-value="${item.id}" src="{{media_path}}${item.image}" alt=" ">
+                </div>`
+            })
+        })
+    }
+
+    function fetchVideos(){
+        let url = "{% url 'dashboard:videos' %}"
+
+        fetch(url, {
+        method: "GET",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+        }
+        })
+        .then(response => response.json())
+        .then(json => {
+            document.querySelector(".videos").innerHTML = ""
+            json.context.map(item => {
+                document.querySelector(".videos").innerHTML += 
+                `<div onclick="saveTargetInfo(this)" class="video" data-value="${item.vid_id}">
+                    <div class="image">
+                        <img src="https://img.youtube.com/vi/${item.vid_id}/0.jpg" alt=" ">
+                    </div>
+                    <div class="title">${item.title}</div>
+                </div>`
+            })
+        })
+    }
+
+    function fetchAudios(){
+        let url = "{% url 'dashboard:audios' %}"
+
+        fetch(url, {
+        method: "GET",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+        }
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log(json)
+            document.querySelector(".audios").innerHTML = ""
+            json.context.map(item => {
+                document.querySelector(".audios").innerHTML += 
+                `<div onclick="saveTargetInfo(this)" class="audio" data-value="${item.id}">
+                    <audio src="{{media_path}}${item.audio}" controls></audio>
+                    <div class="title">${item.title}</div>
+                </div>`
+            })
+        })
+    }
+
 </script>
 {% endblock %}

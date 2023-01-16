@@ -221,18 +221,18 @@ html {
     align-items: center;
     background-color: whitesmoke;
     min-height: 100vh;
-    min-width: 100vw;
+    min-width: 100%;
 }
 
 .itemsContainer {
     background-color: #ddd;
     border-radius: .5rem;
-    max-width: 90%;
+    width: fit-content;
 }
 
 .item {
     display: grid;
-    grid-template-columns: 3fr 1fr 1fr;
+    grid-template-columns: 50vw 1fr 1fr;
     gap: 1.5rem;
     justify-content: space-between;
     align-items: center;
@@ -286,19 +286,19 @@ html {
 }
 
 .editorContainer {
-    min-width: 90%;
-    max-width: 90%;
+    min-width: 90vw;
+    max-width: 90vw;
 }
 
 .inputGroup {
     display: flex;
-    width: 49%;
+    width: 90vw;
     justify-content: center;
     gap: 1rem;
 }
 
 .input {
-    min-width: 90%;
+    width: 90vw;
     padding: .5rem;
     margin: 1rem 0;
 }
@@ -309,7 +309,6 @@ html {
     gap: 2rem;
     justify-content: center;
     background-color: whitesmoke;
-    min-width: 100vw;
     margin-bottom: 1rem;
 }
 
@@ -337,7 +336,6 @@ html {
     align-items: stretch;
     text-align: center;
     padding: 2rem;
-    width: 30rem;
     gap: 3rem;
 }
 

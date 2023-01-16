@@ -72,7 +72,7 @@
                 <img src="{{ item.main_img.image.url }}" alt="صورة المقال">
             </div>
             {% if item.audio %}
-            <audio src="{{item.audio}}" controls></audio>
+            <audio src="{{item.audio.audio.url}}" controls></audio>
             {% endif %}
         </div>
         <div class="articleText">

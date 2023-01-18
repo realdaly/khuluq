@@ -27,6 +27,7 @@
     .overlay {
         position: absolute;
         top: 0;
+        bottom: 0;
         z-index: 10;
         display: none;
         flex-direction: column;
@@ -35,8 +36,8 @@
         gap: 1rem;
         align-items: center;
         background-color: rgb(0, 0, 0, .8);
-        min-width: 100vw;
-        min-height: 100vh;
+        min-width: 100%;
+        min-height: 100%;
         color: #fff;
     }
 
@@ -82,7 +83,7 @@
         border: 2px solid tomato;
     }
     
-    #imageId, #imagesId, #videosId, #audioId {
+    #imageId, #imagesId, #videosId, #audioId, #pdfId {
         display: none;
     }
 
@@ -122,16 +123,68 @@
         cursor: pointer;
         box-shadow: 0 0 5px #000;
     }
+
+    .books {
+        display: flex;
+        flex-direction: column;
+        justify-content: right;
+        width: 90%;
+        background-color: rgb(255, 255, 255,.7);
+    }
+
+    .books .book {
+        display: flex;
+        gap: .5rem;
+        align-items: center;
+        color: black;
+        padding: .3rem;
+        width: 20rem;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 1px;
+        min-width: 100%;
+        cursor: pointer;
+    }
+
+    .book {
+        display: flex;
+        gap: .5rem;
+        align-items: center;
+        color: black;
+        padding: .3rem;
+    }
+
+    .displayedBook {
+        background-color: #ddd;
+        box-shadow: 0 0 5px #000;
+    }
+
+    .book:last-of-type {
+        box-shadow: none;
+    }
+
+
+    .book img {
+        width: 1.5rem;
+    }
+
+    .allImages img,
+    .allVideos .video {
+        cursor: pointer;
+    }
+
+    .allImages img:hover,
+    .allVideos .video:hover,
+    .books .book:hover {
+        border: 2px solid tomato;
+    }
 </style>
-<form method="POST" class="items">
+<form onsubmit="event.preventDefault()" method="POST" class="items">
     <h1 class="itemsTitle">اضافة عنصر</h1>
     {% csrf_token %}
     <input class="input" value="{{data.title}}" name="title" type="text" placeholder="العنوان" required>
 
     {% if section.book %}
     <div class="inputGroup">
-        <input class="input" value="{{data.title}}" name="pdf_file" type="text" placeholder="رابط ملف pdf">
-        <input class="input" value="{{data.title}}" name="doc_file" type="text" placeholder="رابط ملف doc">
+        <input class="input" name="doc_file" type="text" placeholder="رابط ملف doc">
     </div>
     {% endif %}
     
@@ -148,6 +201,16 @@
         </div>
         {% endif %}
     </div>
+
+    {% if section.book %}
+    <button onclick="openOverlay(this, 'book');fetchPDFS()" type="button" class="button">ملف pdf</button>
+    <input id="pdfId" class="input" name="pdf_file" type="text">
+    <div class="book" data-value="${item.id}">
+        <img src="{% static 'icons/pdf.svg' %}">
+        <p class="title">${item.title}</p>
+    </div>
+    <button class="button">ملف word</button>
+    {% endif %}
 
     
     {% if section.max %}
@@ -205,7 +268,8 @@
     </div>
     {% endif %}
 
-    <input class="button" type="submit" value="إرسال">
+    <p class="message"></p>
+    <input onclick="formValidation(this.parentElement)" class="button" type="submit" value="إرسال">
 </form>
 
 <!-- Message overlay -->
@@ -246,6 +310,15 @@
     <button class="close" type="button" onclick="closeOverlay(this)">×</button>
 </div>
 
+<div class="allPDFS overlay">
+    <h1>تحديد ملف pdf</h1>
+    <a onclick="closeOverlay(this)" href="{% url 'dashboard:create-image' %}" target="_blank"><button type="button">رفع صور</button></a>
+    <div class="pdfs books">
+    </div>
+    <button type="button" onclick="pickSelectedTarget(this)">حفظ</button>
+    <button class="close" type="button" onclick="closeOverlay(this)">×</button>
+</div>
+
 <script src="{% static 'js/jodit.min.js' %}"></script>
 <script>
     const editor = Jodit.make('#editor');
@@ -259,6 +332,8 @@
             document.querySelector(".allVideos").style.display = "flex"
         } else if(field == "audio"){
             document.querySelector(".allAudios").style.display = "flex"
+        } else if(field == "book"){
+            document.querySelector(".allPDFS").style.display = "flex"
         } else {
             document.querySelector(".allImages").style.display = "flex"
         }
@@ -312,7 +387,15 @@
 
             localStorage.setItem("audio_id", id)
             localStorage.setItem("audio_src", audioSrc)
-            localStorage.setItem("audio_title", JSON.stringify(audioTitle))
+            localStorage.setItem("audio_title", audioTitle)
+        } else if(field == "book"){
+            document.querySelectorAll(".books .book").forEach(one => one.classList.remove("selected"))
+
+            let bookTitle = target.querySelector(".title").innerHTML
+            let id = target.dataset.value
+
+            localStorage.setItem("audio_id", id)
+            localStorage.setItem("audio_title", bookTitle)
         }
 
         // Adding select effect
@@ -447,7 +530,6 @@
         })
         .then(response => response.json())
         .then(json => {
-            console.log(json)
             document.querySelector(".audios").innerHTML = ""
             json.context.map(item => {
                 document.querySelector(".audios").innerHTML += 
@@ -457,6 +539,38 @@
                 </div>`
             })
         })
+    }
+
+    function fetchPDFS(){
+        let url = "{% url 'dashboard:pdfs' %}"
+
+        fetch(url, {
+        method: "GET",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+        }
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log(json)
+            document.querySelector(".pdfs").innerHTML = "" 
+            json.context.map(item => {
+                document.querySelector(".pdfs").innerHTML += 
+                `<div onclick="saveTargetInfo(this)" class="book" data-value="${item.id}">
+                    <img src="{% static 'icons/pdf.svg' %}">
+                    <p class="title">${item.title}</p>
+                </div>`
+            })
+        })
+    }
+
+    function formValidation(form){
+        const imageField = document.getElementById("imageId")
+        if(imageField.value == null || imageField.value == ""){
+            document.querySelector(".message").innerHTML = `الرجاء اختيار صورة رئيسية`
+        } else {
+            form.submit()
+        }
     }
 
 </script>

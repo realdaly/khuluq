@@ -17,6 +17,8 @@ urlpatterns = [
 
     path("videos/", views.videos, name="videos"),
 
+    path("pdfs/", views.pdfs, name="pdfs"),
+
 
     # Create
     path("create-activity/", views.createActivity, name="create-activity"),

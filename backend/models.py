@@ -29,10 +29,13 @@ class Video(models.Model):
 
 
 
-
+type_list= ['pdf','doc']
 class File(models.Model):
+    FILE_CHOICES=sorted([(item, item) for item in type_list])
+
     file = models.FileField(upload_to="files", blank=False)
     title = models.CharField(max_length=1000, blank=True)
+    type = models.CharField(max_length=10, choices=FILE_CHOICES, blank=True)
 
     def __str__(self):
         return f"{self.title}({self.file.path})"
@@ -47,7 +50,7 @@ class Activity(models.Model):
     body = models.TextField(max_length=5000, blank=False)
     img_array = models.ManyToManyField(Image, blank=True, related_name="images")
     vid_array = models.ManyToManyField(Video, blank=True, related_name="videos")
-    audio = models.ForeignKey(Audio, on_delete=models.PROTECT, blank=False)
+    audio = models.ForeignKey(Audio, on_delete=models.PROTECT, blank=True, null=True)
     active = models.BooleanField(default=False)
 
     class Meta:
@@ -64,8 +67,8 @@ class Production(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     main_img = models.ForeignKey(Image, on_delete=models.PROTECT, blank=False)
     body = models.TextField(max_length=5000, blank=False)
-    pdf_file = models.CharField(max_length=1000, blank=True)
-    doc_file = models.CharField(max_length=1000, blank=True)
+    pdf_file = models.ForeignKey(File, on_delete=models.PROTECT, blank=True, null=True, related_name="pdf")
+    doc_file = models.ForeignKey(File, on_delete=models.PROTECT, blank=True, null=True, related_name="doc")
     active = models.BooleanField(default=False)
 
     class Meta:

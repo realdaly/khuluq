@@ -97,6 +97,25 @@ def videos(request):
     return render(request, "dashboard/files.html", context)
 
 
+def pdfs(request):
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+
+    if is_ajax:
+        if request.method == 'GET':
+            pdfs = list(File.objects.all().exclude(type="doc").values())
+            
+            return JsonResponse({'context': pdfs})
+        return JsonResponse({'status': 'Invalid request'}, status=400)
+
+    pdfs = File.objects.all().exclude(type="doc")
+    section = {
+        "pdf":True
+    }
+
+    context = {"items":pdfs,"section":section}
+    return render(request, "dashboard/files.html", context)
+
+
 
 # -------------------------------- Create ----------------------------
 def createActivity(request):

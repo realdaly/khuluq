@@ -83,7 +83,7 @@
         border: 2px solid tomato;
     }
     
-    #imageId, #imagesId, #videosId, #audioId, #pdfId {
+    #imageId, #imagesId, #videosId, #audioId, #pdfId, #docId {
         display: none;
     }
 
@@ -181,12 +181,6 @@
     <h1 class="itemsTitle">اضافة عنصر</h1>
     {% csrf_token %}
     <input class="input" value="{{data.title}}" name="title" type="text" placeholder="العنوان" required>
-
-    {% if section.book %}
-    <div class="inputGroup">
-        <input class="input" name="doc_file" type="text" placeholder="رابط ملف doc">
-    </div>
-    {% endif %}
     
     <div class="editorContainer">
         <textarea name="body" placeholder="التفاصيل" id="editor" required>{{data.body|safe}}</textarea>
@@ -203,13 +197,26 @@
     </div>
 
     {% if section.book %}
-    <button onclick="openOverlay(this, 'book');fetchPDFS()" type="button" class="button">ملف pdf</button>
-    <input id="pdfId" class="input" name="pdf_file" type="text">
-    <div class="book" data-value="${item.id}">
-        <img src="{% static 'icons/pdf.svg' %}">
-        <p class="title">${item.title}</p>
+    <button onclick="openOverlay(this, 'pdf_file');fetchPDFS()" type="button" class="button">ملف pdf</button>
+    <input value="{{data.pdf_file.id}}" id="pdfId" class="input" name="pdf_file" type="text">
+    <div class="pdf_file">
+        {% if data.pdf_file %}
+        <div class="book">
+            <img src="{% static 'icons/pdf.svg' %}">
+            <p class="title">{{ data.pdf_file.title }}</p>
+        </div>
+        {% endif %}
     </div>
-    <button class="button">ملف word</button>
+    <button onclick="openOverlay(this, 'doc_file');fetchDocs()" type="button" class="button">ملف word</button>
+    <input value="{{data.doc_file.id}}" id="docId" class="input" name="doc_file" type="text">
+    <div class="doc_file">
+        {% if data.doc_file %}
+        <div class="book">
+            <img src="{% static 'icons/word.svg' %}">
+            <p class="title">{{ data.doc_file.title }}</p>
+        </div>
+        {% endif %}
+    </div>
     {% endif %}
 
     
@@ -319,6 +326,15 @@
     <button class="close" type="button" onclick="closeOverlay(this)">×</button>
 </div>
 
+<div class="allDocs overlay">
+    <h1>تحديد ملف word</h1>
+    <a onclick="closeOverlay(this)" href="{% url 'dashboard:create-image' %}" target="_blank"><button type="button">رفع صور</button></a>
+    <div class="docs books">
+    </div>
+    <button type="button" onclick="pickSelectedTarget(this)">حفظ</button>
+    <button class="close" type="button" onclick="closeOverlay(this)">×</button>
+</div>
+
 <script src="{% static 'js/jodit.min.js' %}"></script>
 <script>
     const editor = Jodit.make('#editor');
@@ -332,8 +348,10 @@
             document.querySelector(".allVideos").style.display = "flex"
         } else if(field == "audio"){
             document.querySelector(".allAudios").style.display = "flex"
-        } else if(field == "book"){
+        } else if(field == "pdf_file"){
             document.querySelector(".allPDFS").style.display = "flex"
+        } else if(field == "doc_file"){
+            document.querySelector(".allDocs").style.display = "flex"
         } else {
             document.querySelector(".allImages").style.display = "flex"
         }
@@ -388,14 +406,22 @@
             localStorage.setItem("audio_id", id)
             localStorage.setItem("audio_src", audioSrc)
             localStorage.setItem("audio_title", audioTitle)
-        } else if(field == "book"){
+        } else if(field == "pdf_file"){
             document.querySelectorAll(".books .book").forEach(one => one.classList.remove("selected"))
 
             let bookTitle = target.querySelector(".title").innerHTML
             let id = target.dataset.value
 
-            localStorage.setItem("audio_id", id)
-            localStorage.setItem("audio_title", bookTitle)
+            localStorage.setItem("book_id", id)
+            localStorage.setItem("book_title", bookTitle)
+        } else if(field == "doc_file"){
+            document.querySelectorAll(".books .book").forEach(one => one.classList.remove("selected"))
+
+            let bookTitle = target.querySelector(".title").innerHTML
+            let id = target.dataset.value
+
+            localStorage.setItem("book_id", id)
+            localStorage.setItem("book_title", bookTitle)
         }
 
         // Adding select effect
@@ -469,6 +495,30 @@
             `<audio src="${src}" controls></audio>
             <div class="title">${title}</div>`
             document.getElementById("audioId").value = id
+
+        } else if(field == "pdf_file"){
+            let id = localStorage.getItem("book_id")
+            let title = localStorage.getItem("book_title")
+
+            document.querySelector(".pdf_file").innerHTML = ""
+            document.querySelector(".pdf_file").innerHTML = 
+            `<div class="book">
+                <img src="{% static 'icons/pdf.svg' %}">
+                <p class="title">${title}</p>
+            </div>`
+            document.getElementById("pdfId").value = id
+
+        }  else if(field == "doc_file"){
+            let id = localStorage.getItem("book_id")
+            let title = localStorage.getItem("book_title")
+
+            document.querySelector(".doc_file").innerHTML = ""
+            document.querySelector(".doc_file").innerHTML = 
+            `<div class="book">
+                <img src="{% static 'icons/word.svg' %}">
+                <p class="title">${title}</p>
+            </div>`
+            document.getElementById("docId").value = id
         }
 
         closeOverlay(target)
@@ -552,12 +602,33 @@
         })
         .then(response => response.json())
         .then(json => {
-            console.log(json)
             document.querySelector(".pdfs").innerHTML = "" 
             json.context.map(item => {
                 document.querySelector(".pdfs").innerHTML += 
                 `<div onclick="saveTargetInfo(this)" class="book" data-value="${item.id}">
                     <img src="{% static 'icons/pdf.svg' %}">
+                    <p class="title">${item.title}</p>
+                </div>`
+            })
+        })
+    }
+
+    function fetchDocs(){
+        let url = "{% url 'dashboard:docs' %}"
+
+        fetch(url, {
+        method: "GET",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+        }
+        })
+        .then(response => response.json())
+        .then(json => {
+            document.querySelector(".docs").innerHTML = "" 
+            json.context.map(item => {
+                document.querySelector(".docs").innerHTML += 
+                `<div onclick="saveTargetInfo(this)" class="book" data-value="${item.id}">
+                    <img src="{% static 'icons/word.svg' %}">
                     <p class="title">${item.title}</p>
                 </div>`
             })

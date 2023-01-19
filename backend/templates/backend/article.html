@@ -55,11 +55,11 @@
                 <td> تحميل الكتاب </td>
                 <td>
                     {% if item.pdf_file %}
-                    <a href="{{item.pdf_file}}" class="pdf" download><img src="{% static 'icons/pdf.svg' %}" alt="pdf"></a> 
+                    <a href="{{item.pdf_file.file.url}}" class="pdf" download><img src="{% static 'icons/pdf.svg' %}" alt="pdf"></a> 
                     {% endif %}
                     
                     {% if item.doc_file %}
-                    <a href="{{item.doc_file}}" class="word" download><img src="{% static 'icons/word.svg' %}" alt="word document"></a>
+                    <a href="{{item.doc_file.file.url}}" class="word" download><img src="{% static 'icons/word.svg' %}" alt="word document"></a>
                     {% endif %}
                 </td>
             </tr>

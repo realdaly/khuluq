@@ -115,6 +115,24 @@ def pdfs(request):
     context = {"items":pdfs,"section":section}
     return render(request, "dashboard/files.html", context)
 
+def docs(request):
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+
+    if is_ajax:
+        if request.method == 'GET':
+            docs = list(File.objects.all().exclude(type="pdf").values())
+            
+            return JsonResponse({'context': docs})
+        return JsonResponse({'status': 'Invalid request'}, status=400)
+
+    docs = File.objects.all().exclude(type="pdf")
+    section = {
+        "doc":True
+    }
+
+    context = {"items":docs,"section":section}
+    return render(request, "dashboard/files.html", context)
+
 
 
 # -------------------------------- Create ----------------------------
@@ -264,7 +282,9 @@ def updateActivity(request, pk):
 
 
 def updateProduction(request, pk):
+    media_path = request.build_absolute_uri('/media/')
     all_images = Image.objects.all()
+    section = {"book":True}
     message = ""
 
     production = Production.objects.get(id=pk)
@@ -272,8 +292,10 @@ def updateProduction(request, pk):
     title = production.title
     main_img = production.main_img
     body = production.body
+    pdf_file = production.pdf_file
+    doc_file = production.doc_file
 
-    data = {"title":title,"main_img":main_img,"body":body}
+    data = {"title":title,"main_img":main_img,"body":body,"pdf_file":pdf_file,"doc_file":doc_file}
 
     if request.method == "POST":
         form = ProductionForm(request.POST, instance=production)
@@ -283,7 +305,7 @@ def updateProduction(request, pk):
         else:
             message = "Form is not valid"
 
-    context = {"message":message,"all_images":all_images,"data":data}
+    context = {"media_path":media_path,"section":section,"message":message,"all_images":all_images,"data":data}
     return render(request, "dashboard/forms/create_form.html", context)
 
 

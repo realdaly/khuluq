@@ -38,6 +38,29 @@ def productions(request):
     return render(request, "dashboard/items.html", context)
 
 
+def pBooks(request):
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+
+    if is_ajax:
+        if request.method == 'GET':
+            import json
+            post_data = request.GET.get("type")
+            # obj = json.loads(post_data)
+            print(post_data)
+            pBooks = list(pBook.objects.all().values())
+            
+            return JsonResponse({'context': pBooks})
+        return JsonResponse({'status': 'Invalid request'}, status=400)
+
+    # pBooks = pBook.objects.all()
+    # section = {
+    #     "productions":False
+    # }
+
+    # context = {"items":pBooks,"section":section}
+    # return render(request, "dashboard/items.html", context)
+
+
 def images(request):
     media_path = request.build_absolute_uri('/media/')
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'

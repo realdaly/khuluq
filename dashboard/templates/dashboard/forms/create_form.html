@@ -385,6 +385,7 @@
 
             localStorage.setItem("images_id", JSON.stringify(ids))
             localStorage.setItem("images_src", JSON.stringify(srcs))
+
         } else if(field == "vid_array"){
             let imageSrc = target.querySelector("img").src
             let vidTitle = target.querySelector(".title").innerHTML
@@ -559,7 +560,7 @@
             document.querySelector(".videos").innerHTML = ""
             json.context.map(item => {
                 document.querySelector(".videos").innerHTML += 
-                `<div onclick="saveTargetInfo(this)" class="video" data-value="${item.vid_id}">
+                `<div onclick="saveTargetInfo(this)" class="video" data-value="${item.id}">
                     <div class="image">
                         <img src="https://img.youtube.com/vi/${item.vid_id}/0.jpg" alt=" ">
                     </div>

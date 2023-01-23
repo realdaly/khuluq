@@ -54,5 +54,26 @@
         <a class="button buttonPrimary" href="{% url 'dashboard:create-production' %}">إضافة نتاج</a>
         {% endif %}
     </div>
+
+    <script>
+        let url = "{% url 'dashboard:pBooks' %}"
+
+        let data = {
+            type: "title"
+        }
+        const options = {
+            method: "GET",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest",
+            },
+            data: data
+        }
+
+        fetch(url, options)
+        .then(response => response.json())
+        .then(json => {
+            console.log(json)
+        })
+    </script>
     
 {% endblock %}

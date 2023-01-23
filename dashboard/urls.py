@@ -21,6 +21,8 @@ urlpatterns = [
 
     path("docs/", views.docs, name="docs"),
 
+    path("pbooks/", views.pBooks, name="pBooks"),
+
 
     # Create
     path("create-activity/", views.createActivity, name="create-activity"),

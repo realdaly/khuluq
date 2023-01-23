@@ -76,3 +76,17 @@ class Production(models.Model):
 
     def __str__(self):
         return self.title
+
+
+
+
+class pBook(models.Model):
+    title = models.CharField(max_length=1000, blank=True)
+    author = models.CharField(max_length=1000, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.title} - {self.author}"

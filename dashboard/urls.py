@@ -11,6 +11,8 @@ urlpatterns = [
 
     path("productions/", views.productions, name="productions"),
 
+    path("library/", views.library, name="library"),
+
     path("images/", views.images, name="images"),
 
     path("audios/", views.audios, name="audios"),
@@ -21,13 +23,13 @@ urlpatterns = [
 
     path("docs/", views.docs, name="docs"),
 
-    path("pbooks/", views.pBooks, name="pBooks"),
-
 
     # Create
     path("create-activity/", views.createActivity, name="create-activity"),
 
     path("create-production/", views.createProduction, name="create-production"),
+
+    path("create-book/", views.createBook, name="create-book"),
 
     path("upload-image/", views.createImage, name="create-image"),
 
@@ -43,11 +45,15 @@ urlpatterns = [
     path("update-production/<str:pk>/", views.updateProduction, name="update-production"),
     path("activate-production/<str:pk>/ ", views.activateProduction, name="activate-production"),
     
+    path("update-book/<str:pk>/", views.updatePBook, name="update-book"),
     
+
     # Delete
     path("delete-activity/<str:pk>/", views.deleteActivity, name="delete-activity"),
 
     path("delete-production/<str:pk>/", views.deleteProduction, name="delete-production"),
+
+    path("delete-book/<str:pk>/", views.deletePBook, name="delete-book"),
     
     path("delete-image/<str:pk>/", views.deleteImage, name="delete-image"),
 

@@ -81,8 +81,20 @@ class Production(models.Model):
 
 
 class pBook(models.Model):
-    title = models.CharField(max_length=1000, blank=True)
-    author = models.CharField(max_length=1000, blank=True)
+    title = models.CharField(max_length=300, blank=True)
+    author = models.CharField(max_length=300, blank=True)
+    translator = models.CharField(max_length=300, blank=True)
+    investigator = models.CharField(max_length=300, blank=True)
+    publisher = models.CharField(max_length=300, blank=True)
+    edition = models.CharField(max_length=50, blank=True)
+    pdate = models.CharField(max_length=50, blank=True)
+    description = models.CharField(max_length=1000, blank=True)
+    century = models.CharField(max_length=50, blank=True)
+    language = models.CharField(max_length=50, blank=True)
+    phouse = models.CharField(max_length=300, blank=True)
+    size = models.CharField(max_length=50, blank=True)
+    crate = models.CharField(max_length=10, blank=True)
+    shelf = models.CharField(max_length=10, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

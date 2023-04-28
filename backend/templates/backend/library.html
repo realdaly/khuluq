@@ -1,0 +1,187 @@
+{% extends "backend/layout.html" %}
+{% load static %}
+
+{% block extraHead %}
+<link rel="stylesheet" href="{% static 'css/pages.css' %}">
+<script src="{% static 'js/pages.js' %}" defer></script>
+{% endblock %}
+
+{% block body %}
+
+<main>
+    <div class="path">
+      <p class="component"><a href="/"> الصفحة الرئيسية </a></p>
+      <p class="pathArrow"> » </p>
+      <h1 class="component"><a href="./pLibrary"> المكتبة الورقية </a></h1>
+    </div>
+    
+    <div class="pageContainer">
+        <div class="searchWindow">
+
+            <div class="windowTitle">
+            <p> المكتبة الورقية </p>
+            </div>
+
+            <div class="windowOptions">
+
+            <form id="searchForm" class="searchForm">
+                <input name="q" type="text" class="searchField" id="userInput" placeholder="البحث في المكتبة">
+                <select style="display: none" name="field">
+                    <option id="toChange" value="all"></option>
+                </select>
+                <input class="submit" type="submit" value="بحث">
+            </form>
+
+            <fieldset>
+                <legend>&nbsp; البحث بحسب: &nbsp;&nbsp;&nbsp; </legend>
+
+                <label onclick="switchIt(this)" data-type="all">
+                    <input class="option" type="radio" name="category" checked="">
+                        جميع المعلومات 
+                </label>
+
+                <label onclick="switchIt(this)" data-type="title">
+                    <input class="option" type="radio" name="category">
+                        عنوان الكتاب 
+                </label>
+        
+                <label onclick="switchIt(this)" data-type="person">
+                    <input class="option" type="radio" name="category">
+                        المؤلف/المترجم/المحقق 
+                </label>
+        
+                <label onclick="switchIt(this)" data-type="publisher">
+                    <input class="option" type="radio" name="category">
+                        الناشر 
+                </label>
+
+                <label onclick="switchIt(this)" data-type="edition">
+                    <input class="option" type="radio" name="category">
+                        الطبعة 
+                </label>
+
+                <label onclick="switchIt(this)" data-type="pdate">
+                    <input class="option" type="radio" name="category">
+                        تاريخ الطباعة 
+                </label>
+
+                <label onclick="switchIt(this)" data-type="description">
+                    <input class="option" type="radio" name="category">
+                        وصف الكتاب 
+                </label>
+
+                <label onclick="switchIt(this)" data-type="century">
+                    <input class="option" type="radio" name="category">
+                        القرن 
+                </label>
+
+                <label onclick="switchIt(this)" data-type="language">
+                    <input class="option" type="radio" name="category">
+                        اللغة 
+                </label>
+
+                <label onclick="switchIt(this)" data-type="phouse">
+                    <input class="option" type="radio" name="category">
+                        مكان الطبع 
+                </label>
+
+                <label onclick="switchIt(this)" data-type="size">
+                    <input class="option" type="radio" name="category">
+                        حجم الكتاب 
+                </label>
+
+                <label onclick="switchIt(this)" data-type="crate">
+                    <input class="option" type="radio" name="category">
+                        القفصة 
+                </label>
+
+                <label onclick="switchIt(this)" data-type="shelf">
+                    <input class="option" type="radio" name="category">
+                        الرف 
+                </label>
+
+            </fieldset>
+
+            </div>
+        </div>
+
+        <div id="tableContainer">
+            {% for pbook in pBooks %}
+            <table class="pLibraryTable" id="pLibrary">
+                <tbody>
+                    <tr>
+                    <td data-label="عنوان الكتاب">{{pbook.title}}</td>
+                    <td data-label="المؤلف">{{pbook.author}}</td>
+                    <td data-label="المترجم">{{pbook.translator}}</td>
+                    <td data-label="المحقق">{{pbook.investigator}}</td>
+                    <td data-label="الناشر">{{pbook.publisher}}</td>
+                    <td data-label="الطبعة">{{pbook.edition}}</td>
+                    <td data-label="تاريخ الطباعة">{{pbook.pdate}}</td>
+                    <td data-label="وصف الكتاب">{{pbook.description}}</td>
+                    <td data-label="القرن">{{pbook.century}}</td>
+                    <td data-label="اللغة">{{pbook.language}}</td>
+                    <td data-label="مكان الطبع">{{pbook.phouse}}</td>
+                    <td data-label="حجم الكتاب">{{pbook.size}}</td>
+                    <td data-label="القفصة">{{pbook.crate}}</td>
+                    <td data-label="الرف">{{pbook.shelf}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            {% empty %}
+            <p>لا توجد بيانات</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="paginationBar"></div>
+</main>
+
+  <script>
+    function switchIt(clicked){
+        const toChange = document.getElementById("toChange")
+        toChange.value = clicked.dataset.type
+    }
+
+    const searchForm = document.querySelector('#searchForm');
+    const searchResults = document.querySelector('#tableContainer');
+
+    searchForm.addEventListener('submit', event => {
+        event.preventDefault();
+        const formData = new FormData(searchForm);
+
+        fetch('/searchLibrary/?' + new URLSearchParams(formData))
+            .then(response => response.json())
+            .then(data => {
+                searchResults.innerHTML = '';
+                if(data.books.length > 0){
+                    data.books.map(pbook => {
+                        searchResults.innerHTML += 
+                        `<table class="pLibraryTable" id="pLibrary">
+                            <tbody>
+                                <tr>
+                                <td data-label="عنوان الكتاب">${pbook.title}</td>
+                                <td data-label="المؤلف">${pbook.author}</td>
+                                <td data-label="المترجم">${pbook.translator}</td>
+                                <td data-label="المحقق">${pbook.investigator}</td>
+                                <td data-label="الناشر">${pbook.publisher}</td>
+                                <td data-label="الطبعة">${pbook.edition}</td>
+                                <td data-label="تاريخ الطباعة">${pbook.pdate}</td>
+                                <td data-label="وصف الكتاب">${pbook.description}</td>
+                                <td data-label="القرن">${pbook.century}</td>
+                                <td data-label="اللغة">${pbook.language}</td>
+                                <td data-label="مكان الطبع">${pbook.phouse}</td>
+                                <td data-label="حجم الكتاب">${pbook.size}</td>
+                                <td data-label="القفصة">${pbook.crate}</td>
+                                <td data-label="الرف">${pbook.shelf}</td>
+                                </tr>
+                            </tbody>
+                        </table>`
+                    })
+                } else {
+                    searchResults.innerHTML = 'غير موجود';
+                }
+            });
+    });
+</script>
+
+{% endblock %}

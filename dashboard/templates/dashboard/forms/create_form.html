@@ -177,15 +177,32 @@
         border: 2px solid tomato;
     }
 </style>
-<form onsubmit="event.preventDefault()" method="POST" class="items">
+<form {% if section.image %}onsubmit="event.preventDefault()"{% endif %} method="POST" class="items">
     <h1 class="itemsTitle">اضافة عنصر</h1>
     {% csrf_token %}
     <input class="input" value="{{data.title}}" name="title" type="text" placeholder="العنوان" required>
-    
+    {% if section.library %}
+    <input class="input" value="{{data.author}}" name="author" type="text" placeholder="المؤلف" required>
+    <input class="input" value="{{data.translator}}" name="translator" type="text" placeholder="المترجم" required>
+    <input class="input" value="{{data.investigator}}" name="investigator" type="text" placeholder="المحقق" required>
+    <input class="input" value="{{data.publisher}}" name="publisher" type="text" placeholder="الناشر" required>
+    <input class="input" value="{{data.edition}}" name="edition" type="text" placeholder="النسخة" required>
+    <input class="input" value="{{data.pdate}}" name="pdate" type="text" placeholder="تاريخ الطباعة" required>
+    <input class="input" value="{{data.description}}" name="description" type="text" placeholder="وصف الكتاب" required>
+    <input class="input" value="{{data.century}}" name="century" type="text" placeholder="القرن" required>
+    <input class="input" value="{{data.language}}" name="language" type="text" placeholder="اللغة" required>
+    <input class="input" value="{{data.phouse}}" name="phouse" type="text" placeholder="مكان الطبع" required>
+    <input class="input" value="{{data.size}}" name="size" type="text" placeholder="الحجم" required>
+    <input class="input" value="{{data.crate}}" name="crate" type="text" placeholder="القفصة" required>
+    <input class="input" value="{{data.shelf}}" name="shelf" type="text" placeholder="الرف" required>
+
+    {% endif %}
+
     <div class="editorContainer">
         <textarea name="body" placeholder="التفاصيل" id="editor" required>{{data.body|safe}}</textarea>
     </div>
     
+    {% if section.image %}
     <button class="button" onclick="openOverlay(this, 'main_img');fetchImages()" type="button">الصورة الرئيسية</button>
     <input value="{{data.main_img.id}}" type="text" id="imageId" name="main_img">
     <div class="mainImage">
@@ -195,6 +212,7 @@
         </div>
         {% endif %}
     </div>
+    {% endif %}
 
     {% if section.book %}
     <button onclick="openOverlay(this, 'pdf_file');fetchPDFS()" type="button" class="button">ملف pdf</button>
@@ -276,7 +294,7 @@
     {% endif %}
 
     <p class="message"></p>
-    <input onclick="formValidation(this.parentElement)" class="button" type="submit" value="إرسال">
+    <input {% if section.image  %}onclick="formValidation(this.parentElement)"{%endif%} class="button" type="submit" value="إرسال">
 </form>
 
 <!-- Message overlay -->

@@ -21,6 +21,7 @@ def index(request):
 def activities(request):
     activities = Activity.objects.all()
     section = {
+        "image":True,
         "activities":True
     }
 
@@ -31,6 +32,7 @@ def activities(request):
 def productions(request):
     productions = Production.objects.all()
     section = {
+        "image":True,
         "productions":True
     }
 
@@ -38,27 +40,15 @@ def productions(request):
     return render(request, "dashboard/items.html", context)
 
 
-def pBooks(request):
-    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+def library(request):
+    books = pBook.objects.all()
+    section = {
+        "image":False,
+        "library":True
+    }
 
-    if is_ajax:
-        if request.method == 'GET':
-            import json
-            post_data = request.GET.get("type")
-            # obj = json.loads(post_data)
-            print(post_data)
-            pBooks = list(pBook.objects.all().values())
-            
-            return JsonResponse({'context': pBooks})
-        return JsonResponse({'status': 'Invalid request'}, status=400)
-
-    # pBooks = pBook.objects.all()
-    # section = {
-    #     "productions":False
-    # }
-
-    # context = {"items":pBooks,"section":section}
-    # return render(request, "dashboard/items.html", context)
+    context = {"items":books, "section":section}
+    return render(request, "dashboard/items.html", context)
 
 
 def images(request):
@@ -162,7 +152,7 @@ def docs(request):
 def createActivity(request):
     media_path = request.build_absolute_uri('/media/')
     message = ""
-    section = {"max":True}
+    section = {"max":True, "image":True}
 
     if request.method == "POST":
         title = request.POST["title"]
@@ -189,7 +179,7 @@ def createActivity(request):
 def createProduction(request):
     media_path = request.build_absolute_uri('/media/')
     message = ""
-    section = {"book":True}
+    section = {"book":True, "image":True}
 
     if request.method == "POST":
         title = request.POST["title"]
@@ -209,6 +199,39 @@ def createProduction(request):
             message = "الرجاء ملئ جميع الحقول المطلوبة"
 
     context = {"section":section,"message":message,"media_path":media_path}
+    return render(request, "dashboard/forms/create_form.html", context)
+
+
+def createBook(request):
+    message = ""
+    section = {"library":True}
+
+    if request.method == "POST":
+        title = request.POST["title"]
+        author = request.POST["author"]
+        translator = request.POST["translator"]
+        investigator = request.POST["investigator"]
+        edition = request.POST["edition"]
+        pdate = request.POST["pdate"]
+        description = request.POST["description"]
+        century = request.POST["century"]
+        language = request.POST["language"]
+        phouse = request.POST["phouse"]
+        size = request.POST["size"]
+        crate = request.POST["crate"]
+        shelf = request.POST["shelf"]
+
+        data = {"title":title,"author":author,"translator":translator,"investigator":investigator,"edition":edition,"pdate":pdate,"description":description,"century":century,"language":language,"phouse":phouse,"size":size,"crate":crate,"shelf":shelf}
+
+        form = PBookForm(data)
+
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard:library")
+        else:
+            message = "الرجاء ملئ جميع الحقول المطلوبة"
+
+    context = {"section":section,"message":message}
     return render(request, "dashboard/forms/create_form.html", context)
 
 
@@ -332,6 +355,39 @@ def updateProduction(request, pk):
     return render(request, "dashboard/forms/create_form.html", context)
 
 
+def updatePBook(request, pk):
+    section = {"library":True}
+    message = ""
+
+    book = pBook.objects.get(id=pk)
+    form = PBookForm(instance=book)
+    title = book.title
+    author = book.author
+    translator = book.translator
+    investigator = book.investigator
+    edition = book.edition
+    pdate = book.pdate
+    description = book.description
+    century = book.century
+    language = book.language
+    phouse = book.phouse
+    size = book.size
+    crate = book.crate
+    shelf = book.shelf
+
+    data = {"title":title,"author":author,"translator":translator,"investigator":investigator,"edition":edition,"pdate":pdate,"description":description,"century":century,"language":language,"phouse":phouse,"size":size,"crate":crate,"shelf":shelf}
+
+    if request.method == "POST":
+        form = PBookForm(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard:library")
+        else:
+            message = "Form is not valid"
+
+    context = {"data":data,"section":section}
+    return render(request, "dashboard/forms/create_form.html", context)
+
 
 
 # -------------------------------- Delete ----------------------------
@@ -354,6 +410,17 @@ def deleteProduction(request, pk):
         return redirect("dashboard:productions")
 
     context = {"item":production}
+    return render(request, "dashboard/forms/delete_form.html", context)
+
+
+def deletePBook(request, pk):
+    book = pBook.objects.get(id=pk)
+
+    if request.method == "POST":
+        book.delete()
+        return redirect("dashboard:library")
+
+    context = {"item":book}
     return render(request, "dashboard/forms/delete_form.html", context)
 
 

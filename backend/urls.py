@@ -12,4 +12,7 @@ urlpatterns = [
     path("productions", views.productions, name="productions"),
     path("production/<str:pk>/", views.production, name="production"),
 
+    path("library/", views.pBooks, name="library"),
+    path("searchLibrary/", views.searchLibrary, name="searchLibrary"),
+
 ]

@@ -12,6 +12,12 @@ class ProductionForm(ModelForm):
         model = Production
         fields = "__all__"
 
+
+class PBookForm(ModelForm):
+    class Meta:
+        model = pBook
+        fields = "__all__"
+
 class ImageForm(ModelForm):
     class Meta:
         model = Image

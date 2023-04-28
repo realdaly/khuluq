@@ -16,7 +16,12 @@
             {% for item in items %}
             <div class="item">
                 <p>{{ item.title }}</p>
+                {% if section.image %}
                 <img width="150" height="100" src="{{ item.main_img.image.url }}" alt="">
+                {% endif %}
+                {% if section.library %}
+                <p>{{ item.author }}</p>
+                {% endif %}
                 <div class="buttons">
                     {% if section.activities %}
                     <form action="{% url 'dashboard:activate-activity' item.id %}" method="POST">
@@ -40,6 +45,17 @@
                     </form>
                     <a class="button buttonEdit" href="{% url 'dashboard:update-production' item.id %}">تعديل</a>
                     <a class="button buttonDanger" href="{% url 'dashboard:delete-production' item.id %}">حذف</a>
+                    {% elif section.library %}
+                    <form action="{% url 'dashboard:activate-production' item.id %}" method="POST">
+                        {% csrf_token %}
+                        <input onchange="this.form.submit()" class="checkbox" type="checkbox" 
+                        {% if item.active == True %}
+                        checked
+                        {% endif %}
+                        >
+                    </form>
+                    <a class="button buttonEdit" href="{% url 'dashboard:update-book' item.id %}">تعديل</a>
+                    <a class="button buttonDanger" href="{% url 'dashboard:delete-book' item.id %}">حذف</a>
                     {% endif %}
                 </div>
             </div>
@@ -52,28 +68,9 @@
         <a class="button buttonPrimary" href="{% url 'dashboard:create-activity' %}">إضافة نشاط</a>
         {% elif section.productions %}
         <a class="button buttonPrimary" href="{% url 'dashboard:create-production' %}">إضافة نتاج</a>
+        {% elif section.library %}
+        <a class="button buttonPrimary" href="{% url 'dashboard:create-book' %}">إضافة كتاب</a>
         {% endif %}
     </div>
-
-    <script>
-        let url = "{% url 'dashboard:pBooks' %}"
-
-        let data = {
-            type: "title"
-        }
-        const options = {
-            method: "GET",
-            headers: {
-                "X-Requested-With": "XMLHttpRequest",
-            },
-            data: data
-        }
-
-        fetch(url, options)
-        .then(response => response.json())
-        .then(json => {
-            console.log(json)
-        })
-    </script>
     
 {% endblock %}

@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-
-from hitcount.utils import get_hitcount_model
-from hitcount.views import HitCountMixin
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 
 from .models import *
 
@@ -38,17 +38,6 @@ def activity(request, pk):
     section = {"activities":"activities"}
     context = {"item":activity,"section":section}
 
-    # hitcount logic
-    hit_count = get_hitcount_model().objects.get_for_object(activity)
-    hits = hit_count.hits
-    hitcontext = context['hitcount'] = {'pk': hit_count.pk}
-    hit_count_response = HitCountMixin.hit_count(request, hit_count)
-    if hit_count_response.hit_counted:
-        hits = hits + 1
-    hitcontext['hit_counted'] = hit_count_response.hit_counted
-    hitcontext['hit_message'] = hit_count_response.hit_message
-    hitcontext['total_hits'] = hits
-
     return render (request, "backend/article.html", context)
 
 
@@ -57,15 +46,47 @@ def production(request, pk):
     section = {"productions":"productions","book":True}
     context = {"item":production,"section":section}
 
-    # hitcount logic
-    hit_count = get_hitcount_model().objects.get_for_object(production)
-    hits = hit_count.hits
-    hitcontext = context['hitcount'] = {'pk': hit_count.pk}
-    hit_count_response = HitCountMixin.hit_count(request, hit_count)
-    if hit_count_response.hit_counted:
-        hits = hits + 1
-    hitcontext['hit_counted'] = hit_count_response.hit_counted
-    hitcontext['hit_message'] = hit_count_response.hit_message
-    hitcontext['total_hits'] = hits
-
     return render (request, "backend/article.html", context)
+
+
+def pBooks(request):
+    pBooks = pBook.objects.all()
+    section = {"activities":"activities"}
+    context = {"pBooks":pBooks}
+    return render(request, "backend/library.html", context)
+
+
+@csrf_exempt
+def searchLibrary(request):
+    search_term = request.GET.get("q")
+    search_field = request.GET.get("field")
+    if search_field == "all":
+        books = pBook.objects.filter(Q(title__icontains=search_term) | Q(author__icontains=search_term) | Q(translator__icontains=search_term) | Q(investigator__icontains=search_term) | Q(publisher__icontains=search_term) | Q(edition__icontains=search_term) | Q(pdate__icontains=search_term) | Q(description__icontains=search_term) | Q(century__icontains=search_term) | Q(language__icontains=search_term) | Q(phouse__icontains=search_term) | Q(size__icontains=search_term) | Q(crate__icontains=search_term) | Q(shelf__icontains=search_term))
+    elif search_field == "title":
+        books = pBook.objects.filter(title__icontains=search_term)
+    elif search_field == "person":
+        books = pBook.objects.filter(Q(author__icontains=search_term) | Q(translator__icontains=search_term) | Q(investigator__icontains=search_term))
+    elif search_field == "publisher":
+        books = pBook.objects.filter(publisher__icontains=search_term)
+    elif search_field == "edition":
+        books = pBook.objects.filter(edition__icontains=search_term)
+    elif search_field == "pdate":
+        books = pBook.objects.filter(pdate__icontains=search_term)
+    elif search_field == "description":
+        books = pBook.objects.filter(description__icontains=search_term)
+    elif search_field == "century":
+        books = pBook.objects.filter(century__icontains=search_term)
+    elif search_field == "language":
+        books = pBook.objects.filter(language__icontains=search_term)
+    elif search_field == "phouse":
+        books = pBook.objects.filter(phouse__icontains=search_term)
+    elif search_field == "size":
+        books = pBook.objects.filter(size__icontains=search_term)
+    elif search_field == "crate":
+        books = pBook.objects.filter(crate__icontains=search_term)
+    elif search_field == "shelf":
+        books = pBook.objects.filter(shelf__icontains=search_term)
+    else:
+        books = pBook.objects.none()
+    data = {"books": list(books.values())}
+    return JsonResponse(data, safe=False)

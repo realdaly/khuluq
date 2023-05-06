@@ -3,6 +3,8 @@ from .models import *
 
 
 
+admin.site.register(Page)
+admin.site.register(Article)
 admin.site.register(Activity)
 admin.site.register(Production)
 admin.site.register(pBook)

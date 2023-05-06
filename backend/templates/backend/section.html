@@ -18,6 +18,7 @@
             {% elif productions %}
             <a href="{% url 'backend:productions' %}"> نتاجات المؤسسة </a>
             {% endif %}
+            <a href="{% url 'backend:items' page.slug %}">{{ page.title }}</a>
         </p>
     </div>
     
@@ -26,6 +27,14 @@
         itemsContainer
         {% endif %}
     ">
+
+        {% for item in items %}
+        <a href="{% url 'backend:itemDetails' page.slug item.id %}">
+            <h1>{{item.title}}</h1>
+        </a>
+        {% empty %}
+        <h1>ماكو</h1>  
+        {% endfor %}
 
         {% if activities %}
         
@@ -68,7 +77,6 @@
             </a>
             {% endfor %}
         {% else %}
-            <p>لا توجد عناصر</p>
         {% endif %}
 
     </div>

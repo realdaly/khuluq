@@ -12,6 +12,7 @@
         {% elif section.productions %}
         <h1 class="itemsTitle">نتاجات المؤسسة</h1>
         {% endif %}
+        <h1>{{page.title}}</h1>
         <div class="itemsContainer">
             {% for item in items %}
             <div class="item">
@@ -57,6 +58,8 @@
                     <a class="button buttonEdit" href="{% url 'dashboard:update-book' item.id %}">تعديل</a>
                     <a class="button buttonDanger" href="{% url 'dashboard:delete-book' item.id %}">حذف</a>
                     {% endif %}
+                    <a class="button buttonEdit" href="{% url 'dashboard:update-item' page.slug item.id %}">تعديل</a>
+                    <a class="button buttonDanger" href="{% url 'dashboard:delete-item' page.slug item.id %}">حذف</a>
                 </div>
             </div>
             
@@ -71,6 +74,7 @@
         {% elif section.library %}
         <a class="button buttonPrimary" href="{% url 'dashboard:create-book' %}">إضافة كتاب</a>
         {% endif %}
+        <a class="button buttonPrimary" href="{% url 'dashboard:create-item' page.slug %}">إضافة عنصر</a>
     </div>
     
 {% endblock %}

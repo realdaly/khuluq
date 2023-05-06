@@ -42,6 +42,24 @@ class File(models.Model):
 
 
 
+class Page(models.Model):
+    title = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)
+    order = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return self.title
+
+
+class Article(models.Model):
+    title = models.CharField(max_length=255)
+    details = models.TextField(max_length=10000)
+    page = models.ForeignKey(Page, null=True, blank=True, on_delete=models.CASCADE, related_name="articles")
+
+    def __str__(self):
+        return self.title
+
+
 
 class Activity(models.Model):
     title = models.CharField(max_length=1000, blank=False)

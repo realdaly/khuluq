@@ -25,6 +25,10 @@ urlpatterns = [
 
 
     # Create
+    path("create-page/", views.createPage, name="create-page"),
+
+    path("<str:slug>/create-item/", views.createItem, name="create-item"),
+
     path("create-activity/", views.createActivity, name="create-activity"),
 
     path("create-production/", views.createProduction, name="create-production"),
@@ -39,6 +43,8 @@ urlpatterns = [
 
 
     # Update
+    path("<str:slug>/update-item/<str:pk>/", views.updateItem, name="update-item"),
+
     path("update-activity/<str:pk>/", views.updateActivity, name="update-activity"),
     path("activate-activity/<str:pk>/ ", views.activateActivity, name="activate-activity"),
 
@@ -49,6 +55,8 @@ urlpatterns = [
     
 
     # Delete
+    path("<str:slug>/delete-item/<str:pk>/", views.deleteItem, name="delete-item"),
+
     path("delete-activity/<str:pk>/", views.deleteActivity, name="delete-activity"),
 
     path("delete-production/<str:pk>/", views.deleteProduction, name="delete-production"),
@@ -59,5 +67,7 @@ urlpatterns = [
 
     path("delete-audio/<str:pk>/", views.deleteAudio, name="delete-audio"),
     
-    path("delete-video/<str:pk>/", views.deleteVideo, name="delete-video")
+    path("delete-video/<str:pk>/", views.deleteVideo, name="delete-video"),
+
+    path("<str:slug>/", views.pageItems, name="page-items"),
 ]

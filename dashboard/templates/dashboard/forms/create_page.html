@@ -1,0 +1,18 @@
+{% extends "dashboard/layout.html" %}
+{% load static %}
+
+
+{% block body %}
+{% include "dashboard/menu.html" %}
+
+<form method="POST" class="items">
+    {% csrf_token %}
+    <h1 class="itemsTitle">إضافة صفحة</h1>
+    <input class="input" value="{{data.title}}" name="title" type="text" placeholder="العنوان" maxlength="255" required>
+    <input class="input" value="{{data.slug}}" name="slug" type="text" placeholder="الرابط في شريط البحث" maxlength="50" required>
+    <p>الترتيب:</p>
+    <input type="number" name="order" value="0" min="0" required="" id="id_order">
+    <p class="message">{{ message }}</p>
+    <input class="button" type="submit" value="إرسال">
+</form>
+{% endblock %}

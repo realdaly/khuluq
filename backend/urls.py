@@ -6,6 +6,10 @@ app_name = "backend"
 urlpatterns = [
     path("", views.home, name="home"),
 
+    path("<str:slug>/", views.page_items, name="items"),
+
+    path("<str:slug>/<str:pk>", views.item_details, name="itemDetails"),
+
     path("activities/", views.activities, name="activities"),
     path("activity/<str:pk>/", views.activity, name="activity"),
 

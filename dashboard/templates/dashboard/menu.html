@@ -96,7 +96,23 @@
                     <img src="{% static 'icons/file_manager.svg' %}" alt="إدارة الملفات">
                     <p>إدارة الملفات</p>
                 </a>
+
+                {% for page in pages %}
+                <a href="{% url 'dashboard:page-items' page.slug %}" class="dashItem">
+                    <p class="pageTitle">
+                    {% with first_char=page.title|slice:"2:3" %}
+                        ({{ first_char }})
+                    {% endwith %}
+                    </p>
+                    <p>{{ page.title }}</p>
+                </a>
+                {% endfor %}
             
+                <a href="{% url 'dashboard:create-page' %}" class="dashItem">
+                    <img src="{% static 'icons/plus.svg' %}" alt="إضافة صفحة">
+                    <p>إضافة صفحة</p>
+                </a>
+
             </div>
 
         </div>

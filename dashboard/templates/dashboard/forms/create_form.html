@@ -198,8 +198,9 @@
 
     {% endif %}
 
+    <input name="page" value="{{ page.id }}">
     <div class="editorContainer">
-        <textarea name="body" placeholder="التفاصيل" id="editor" required>{{data.body|safe}}</textarea>
+        <textarea name="details" placeholder="التفاصيل" id="editor" required>{{data.details|safe}}</textarea>
     </div>
     
     {% if section.image %}

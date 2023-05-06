@@ -1,6 +1,17 @@
 from django.forms import ModelForm
 from backend.models import *
 
+
+class PageForm(ModelForm):
+    class Meta:
+        model = Page
+        fields = "__all__"
+
+class ArticleForm(ModelForm):
+    class Meta:
+        model = Article
+        fields = "__all__"
+
 class ActivityForm(ModelForm):
     class Meta:
         model = Activity

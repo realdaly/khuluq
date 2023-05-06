@@ -16,6 +16,12 @@ def index(request):
     return render(request, "dashboard/index.html", context)
 
 
+def pageItems(request, slug):
+    page = Page.objects.get(slug=slug)
+    items = page.articles.all()
+
+    context = {"items":items, "page":page}
+    return render(request, "dashboard/items.html", context)
 
 
 def activities(request):
@@ -149,6 +155,49 @@ def docs(request):
 
 
 # -------------------------------- Create ----------------------------
+def createPage(request):
+    message = ""
+    if request.method == "POST":
+        title = request.POST["title"]
+        slug = request.POST["slug"]
+        order = request.POST["order"]
+
+        data = {"title":title,"slug":slug,"order":order}
+
+        form = PageForm(data)
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard:dashboard")
+        else:
+            message = "المعلومات غير صالحة!"
+
+    context = {"message":message}
+    return render(request, "dashboard/forms/create_page.html", context)
+
+
+def createItem(request, slug):
+    page = Page.objects.get(slug=slug)
+    message = ""
+
+    if request.method == "POST":
+        title = request.POST["title"]
+        details = request.POST["details"]
+        page = request.POST["page"]
+
+        data = {"title":title, "details":details, "page":page}
+
+        form = ArticleForm(data)
+
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard:page-items", slug=slug)
+        else:
+            message = "البيانات غير صالحة"
+
+    context = {"message":message, "page":page}
+    return render(request, "dashboard/forms/create_form.html", context)
+
+
 def createActivity(request):
     media_path = request.build_absolute_uri('/media/')
     message = ""
@@ -297,9 +346,31 @@ def createAudio(request):
 
 
 # -------------------------------- Update ----------------------------
+def updateItem(request, slug, pk):
+    page = Page.objects.get(slug=slug)
+    item = page.articles.get(id=pk)
+    message = ""
+
+    title = item.title
+    details = item.details
+
+    date = {"title":title,"details":details}
+
+    if request.method == "POST":
+        form = ArticleForm(request.POST, instance=item)
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard:page-items", slug=slug)
+        else:
+            message = "البيانات غير صالحة"
+
+    context = {"page":page,"item":item, "message":message,"data":date}
+    return render(request, "dashboard/forms/create_form.html", context)
+
+
 def updateActivity(request, pk):
     media_path = request.build_absolute_uri('/media/')
-    section = {"max":True}
+    section = {"max":True,"image":True}
     all_images = Image.objects.all()
     all_videos = Video.objects.all()
     message = ""
@@ -391,6 +462,18 @@ def updatePBook(request, pk):
 
 
 # -------------------------------- Delete ----------------------------
+def deleteItem(request, slug, pk):
+    page = Page.objects.get(slug=slug)
+    item = page.articles.get(id=pk)
+
+    if request.method == "POST":
+        item.delete()
+        return redirect("dashboard:page-items", slug=slug)
+    
+    context = {"item": item}
+    return render(request, "dashboard/forms/delete_form.html", context)
+
+
 def deleteActivity(request, pk):
     activity = Activity.objects.get(id=pk)
 

@@ -15,6 +15,21 @@ def home(request):
     return render(request, "backend/home.html", context)
 
 
+def page_items(request, slug):
+    page = Page.objects.get(slug=slug)
+    items = page.articles.all()
+
+    context = {"items":items, "page": page}
+    return render(request, "backend/section.html", context)
+
+def item_details(request, slug, pk):
+    page = Page.objects.get(slug=slug)
+    item = page.articles.get(id=pk)
+
+    context = {"item": item, "page": page}
+    return render(request, "backend/article.html", context)
+
+
 # Section views
 def activities(request):
     activities = Activity.objects.all().exclude(active=False)
